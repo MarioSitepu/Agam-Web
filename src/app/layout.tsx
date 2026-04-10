@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Playball, Montserrat } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
+import { OrderProvider } from "@/context/OrderContext";
 
 const playball = Playball({
   weight: "400",
@@ -18,8 +20,6 @@ export const metadata: Metadata = {
   description: "Experience the soul of Medan streets at Warkop Agam. Specializing in Indomie Bangladesh, Signature Teh Tarek, and authentic Mie Sop Medan.",
 };
 
-import { CartProvider } from "@/context/CartContext";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,9 +31,11 @@ export default function RootLayout({
       className={`${playball.variable} ${montserrat.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <CartProvider>
-          {children}
-        </CartProvider>
+        <OrderProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </OrderProvider>
       </body>
     </html>
   );
