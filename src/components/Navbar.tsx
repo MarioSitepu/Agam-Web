@@ -52,6 +52,13 @@ export default function Navbar() {
           >
             Home
           </Link>
+
+          <Link 
+            href="/order" 
+            className="text-base font-medium transition-colors text-gray-400 hover:text-white"
+          >
+            Order
+          </Link>
           
           {/* Menu with MegaMenu Trigger */}
           <div 
@@ -162,6 +169,8 @@ export default function Navbar() {
       `}>
         <div className="flex flex-col p-6 space-y-4 overflow-y-auto max-h-[80vh]">
           <Link href="/" className="text-white text-xl font-bold" onClick={() => setIsOpen(false)}>Home</Link>
+          
+          <Link href="/order" className="text-white text-xl font-bold hover:text-[#FFB800] transition-colors" onClick={() => setIsOpen(false)}>Order</Link>
           
           <div className="pt-2 border-t border-white/5">
              <p className="text-[#FFB800] text-sm font-bold mb-4 uppercase tracking-widest">Our Menus</p>
