@@ -125,6 +125,13 @@ export default function Navbar() {
               {item}
             </Link>
           ))}
+
+          <Link 
+            href="/cashier" 
+            className="text-base font-medium transition-colors text-gray-400 hover:text-[#FFB800]"
+          >
+            Cashier
+          </Link>
         </div>
 
         {/* Right Section (Actions) */}
@@ -199,6 +206,14 @@ export default function Navbar() {
               {item}
             </Link>
           ))}
+
+          <Link 
+            href="/cashier" 
+            className="text-lg sm:text-xl font-bold text-white hover:text-[#FFB800] transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            Cashier
+          </Link>
           
           <div className="flex items-center gap-4 sm:gap-6 pt-4 sm:pt-6 border-t border-white/10">
             <button className="text-white text-sm sm:text-base font-medium flex items-center gap-2" onClick={() => { setIsCartOpen(true); setIsOpen(false); }}>

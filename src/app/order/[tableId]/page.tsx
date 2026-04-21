@@ -12,6 +12,7 @@ import OrderReviewModal from "@/components/OrderReviewModal";
 import OrderConfirmationModal from "@/components/OrderConfirmationModal";
 import { menuData, MenuItem } from "@/data/menuData";
 import { useOrder } from "@/context/OrderContext";
+import { useCashierOrders } from "@/context/CashierOrdersContext";
 import { AVAILABLE_TABLES } from "@/components/TableSelector";
 import { ArrowLeft, QrCode } from "lucide-react";
 
@@ -39,6 +40,10 @@ export default function OrderPageWithTable() {
   const params = useParams();
   const router = useRouter();
   const tableId = params.tableId as string;
+
+  // Get order contexts
+  const { orderItems, getTotalPrice, clearOrder } = useOrder();
+  const { addOrder } = useCashierOrders();
 
   // Get table info from AVAILABLE_TABLES
   const tableInfo = AVAILABLE_TABLES.find((t) => t.id === tableId);
@@ -98,12 +103,26 @@ export default function OrderPageWithTable() {
   const handleOrderConfirm = async () => {
     setIsSubmittingOrder(true);
     try {
-      // TODO: Send order to backend with tableId
-      console.log(`Submitting order for ${tableLabel}`, {
+      // Calculate order total
+      const totalPrice = getTotalPrice();
+
+      // Add order to cashier dashboard
+      addOrder({
         tableId,
         tableLabel,
-        // orderItems from useOrder hook
+        items: orderItems.map((item) => ({
+          name: item.menuItemName,
+          price: item.menuItemPrice,
+          quantity: item.quantity,
+          customizations: item.customizations.map((c) => `${c.label}: ${c.value}`),
+        })),
+        totalPrice,
+        status: "pending",
       });
+
+      // Clear the order from current context
+      clearOrder();
+
       // Simulate processing
       await new Promise((resolve) => setTimeout(resolve, 1500));
 

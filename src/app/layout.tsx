@@ -3,6 +3,7 @@ import { Playball, Montserrat } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
+import { CashierOrdersProvider } from "@/context/CashierOrdersContext";
 
 const playball = Playball({
   weight: "400",
@@ -31,11 +32,13 @@ export default function RootLayout({
       className={`${playball.variable} ${montserrat.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <OrderProvider>
-          <CartProvider>
-            {children}
-          </CartProvider>
-        </OrderProvider>
+        <CashierOrdersProvider>
+          <OrderProvider>
+            <CartProvider>
+              {children}
+            </CartProvider>
+          </OrderProvider>
+        </CashierOrdersProvider>
       </body>
     </html>
   );
