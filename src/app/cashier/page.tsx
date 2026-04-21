@@ -5,18 +5,21 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AVAILABLE_TABLES } from "@/components/TableSelector";
-import { ArrowLeft, Clock, AlertCircle, Check, X, ArrowRight } from "lucide-react";
+import { ArrowLeft, Clock, AlertCircle, Check, X, ArrowRight, Search } from "lucide-react";
 import { useCashierOrders } from "@/context/CashierOrdersContext";
 
 export default function CashierDashboard() {
   // Get orders from context
-  const { orders, paidOrders, updateOrderStatus, removeOrder, processPaidOrders, changeTableForOrders } = useCashierOrders();
+  const { orders, paidOrders, updateOrderStatus, removeOrder, processPaidOrders, changeTableForOrders, getTableName } = useCashierOrders();
 
   const [activeTab, setActiveTab] = useState<"orders" | "history">("orders");
   const [paymentTableId, setPaymentTableId] = useState<string | null>(null);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
   const [showChangeTableModal, setShowChangeTableModal] = useState(false);
   const [selectedTableIdForChange, setSelectedTableIdForChange] = useState<string | null>(null);
+  const [showQuickPaymentModal, setShowQuickPaymentModal] = useState(false);
+  const [quickPaymentSearch, setQuickPaymentSearch] = useState("");
+  const [selectedQuickPaymentTableId, setSelectedQuickPaymentTableId] = useState<string | null>(null);
 
   // Group orders by tableId
   const groupedOrders = useMemo(() => {
@@ -71,11 +74,73 @@ export default function CashierDashboard() {
     setPaymentTableId(tableId);
   };
 
+  const handleQuickPayment = (tableId: string) => {
+    setSelectedQuickPaymentTableId(null);
+    setShowQuickPaymentModal(false);
+    handlePayment(tableId);
+  };
+
+  const handleDeleteOrderInQuickPayment = (orderId: string) => {
+    // Find the order to check its status
+    const order = orders.find((o) => o.orderId === orderId);
+    
+    // Only allow deletion if order status is "pending"
+    if (order && order.status === "pending") {
+      removeOrder(orderId);
+    }
+  };
+
   // Get available tables (tables not in groupedOrders)
   const availableTables = useMemo(() => {
     const occupiedTableIds = Object.keys(groupedOrders);
     return AVAILABLE_TABLES.filter((table) => !occupiedTableIds.includes(table.id));
   }, [groupedOrders]);
+
+  // Get tables ready for payment (all orders completed OR all orders pending)
+  const tablesReadyForPayment = useMemo(() => {
+    return Object.entries(groupedOrders)
+      .map(([tableId, allTableOrders]) => {
+        const completedOrders = allTableOrders.filter((o) => o.status === "completed");
+        const pendingOrders = allTableOrders.filter((o) => o.status === "pending");
+        const inProgressOrders = allTableOrders.filter((o) => o.status === "in_progress");
+        
+        // Table is ready for payment if:
+        // 1. All orders are completed, OR
+        // 2. All orders are pending (can be cancelled completely)
+        // But NOT if there are any in_progress orders
+        const isReadyForPayment =
+          (allTableOrders.every((o) => o.status === "completed")) ||
+          (allTableOrders.every((o) => o.status === "pending"));
+        
+        return {
+          tableId,
+          tableInfo: AVAILABLE_TABLES.find((t) => t.id === tableId),
+          allOrders: allTableOrders,
+          completedOrders,
+          pendingOrders,
+          inProgressOrders,
+          customerName: getTableName(tableId),
+          isReadyForPayment,
+          canCancelAll: allTableOrders.every((o) => o.status === "pending"),
+        };
+      })
+      .filter((item) => item.isReadyForPayment);
+  }, [groupedOrders, getTableName]);
+
+  // Filter tables for quick payment search
+  const filteredQuickPaymentTables = useMemo(() => {
+    if (!quickPaymentSearch.trim()) {
+      return tablesReadyForPayment;
+    }
+
+    const searchLower = quickPaymentSearch.toLowerCase();
+    return tablesReadyForPayment.filter(
+      (item) =>
+        item.tableInfo?.label.toLowerCase().includes(searchLower) ||
+        item.tableInfo?.id.toLowerCase().includes(searchLower) ||
+        (item.customerName && item.customerName.toLowerCase().includes(searchLower))
+    );
+  }, [tablesReadyForPayment, quickPaymentSearch]);
 
   const handleChangeTable = (fromTableId: string) => {
     setSelectedTableIdForChange(fromTableId);
@@ -182,6 +247,23 @@ export default function CashierDashboard() {
             </button>
           </div>
 
+          {/* Quick Payment Button - Only on Orders tab */}
+          {activeTab === "orders" && tablesReadyForPayment.length > 0 && (
+            <div className="mb-8">
+              <button
+                onClick={() => {
+                  setShowQuickPaymentModal(true);
+                  setQuickPaymentSearch("");
+                  setSelectedQuickPaymentTableId(null);
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all flex items-center gap-2 shadow-md"
+              >
+                <span>⚡ Quick Payment</span>
+                <span className="bg-green-700 px-2 py-0.5 rounded-full text-sm">{tablesReadyForPayment.length}</span>
+              </button>
+            </div>
+          )}
+
           {/* Statistics Cards - Only show on Orders tab */}
           {activeTab === "orders" && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
@@ -221,6 +303,9 @@ export default function CashierDashboard() {
                         <div className="flex items-start justify-between mb-6 pb-4 border-b-2 border-gray-200">
                           <div>
                             <h3 className="text-2xl sm:text-3xl font-bold text-black">{firstOrder.tableLabel}</h3>
+                            {getTableName(tableId) && (
+                              <p className="text-gray-600 text-sm mt-1">Atas nama: <span className="font-semibold">{getTableName(tableId)}</span></p>
+                            )}
                           </div>
                           <div className="flex items-center gap-2">
                             <button
@@ -352,8 +437,17 @@ export default function CashierDashboard() {
 
                               {/* Single Payment Button */}
                               <button
-                                onClick={() => handlePayment(tableId)}
-                                className="w-full bg-primary-brown hover:bg-primary-brown/90 text-white font-bold py-2 sm:py-3 rounded-lg transition-all flex items-center justify-center gap-2"
+                                onClick={() => {
+                                  if (activeOrders.length === 0) {
+                                    handlePayment(tableId);
+                                  }
+                                }}
+                                disabled={activeOrders.length > 0}
+                                className={`w-full font-bold py-2 sm:py-3 rounded-lg transition-all flex items-center justify-center gap-2 ${
+                                  activeOrders.length > 0
+                                    ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                                    : "bg-primary-brown hover:bg-primary-brown/90 text-white cursor-pointer"
+                                }`}
                               >
                                 <span>💳 Process Payment</span>
                               </button>
@@ -428,6 +522,9 @@ export default function CashierDashboard() {
                           <div className="flex items-start justify-between mb-4 pb-4 border-b-2 border-green-200">
                             <div>
                               <h3 className="text-2xl sm:text-3xl font-bold text-black">{firstOrder.tableLabel}</h3>
+                              {firstOrder.customerName && (
+                                <p className="text-gray-600 text-sm mt-1">Atas nama: <span className="font-semibold">{firstOrder.customerName}</span></p>
+                              )}
                               <div className="space-y-1 mt-2">
                                 <p className="text-gray-600 text-sm flex items-center gap-1">
                                   <Clock size={14} />
@@ -591,6 +688,277 @@ export default function CashierDashboard() {
               >
                 Cancel
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Payment Modal */}
+      {showQuickPaymentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            {/* Header */}
+            <div className="sticky top-0 bg-gradient-to-r from-green-600 to-green-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold">⚡ Quick Payment</h2>
+                <p className="text-green-100 text-sm mt-1">Tables ready for payment</p>
+              </div>
+              <button
+                onClick={() => setShowQuickPaymentModal(false)}
+                className="text-white hover:bg-green-800 p-2 rounded-lg transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {/* Search Bar */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Search by Table Number or Customer Name
+                </label>
+                <div className="relative">
+                  <Search size={20} className="absolute left-3 top-3 text-gray-400" />
+                  <input
+                    type="text"
+                    value={quickPaymentSearch}
+                    onChange={(e) => setQuickPaymentSearch(e.target.value)}
+                    placeholder="e.g., Table 5, Budi, table-5"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
+                  />
+                </div>
+              </div>
+
+              {/* Tables List */}
+              <div className="space-y-3 max-h-[calc(90vh-300px)] overflow-y-auto">
+                {filteredQuickPaymentTables.length > 0 ? (
+                  filteredQuickPaymentTables.map((item) => {
+                    const completedAmount = item.completedOrders.reduce((sum, o) => sum + o.totalPrice, 0);
+                    const pendingAmount = item.pendingOrders.reduce((sum, o) => sum + o.totalPrice, 0);
+                    const inProgressAmount = item.inProgressOrders.reduce((sum, o) => sum + o.totalPrice, 0);
+                    const incompleteAmount = pendingAmount + inProgressAmount;
+                    const totalAmount = completedAmount + incompleteAmount;
+                    const isSelected = selectedQuickPaymentTableId === item.tableId;
+                    const canPayNow = item.pendingOrders.length === 0 && item.inProgressOrders.length === 0 && item.completedOrders.length > 0;
+
+                    return (
+                      <div key={item.tableId}>
+                        <button
+                          onClick={() =>
+                            setSelectedQuickPaymentTableId(
+                              isSelected ? null : item.tableId
+                            )
+                          }
+                          className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                            isSelected
+                              ? "border-green-600 bg-green-50"
+                              : "border-gray-200 bg-white hover:border-green-300"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="font-bold text-black text-lg">
+                                {item.tableInfo?.label}
+                              </h3>
+                              {item.customerName && (
+                                <p className="text-gray-600 text-sm mt-1">
+                                  Atas nama: <span className="font-semibold">{item.customerName}</span>
+                                </p>
+                              )}
+                              <p className="text-gray-600 text-sm mt-2">
+                                ✓ {item.completedOrders.length} order{item.completedOrders.length > 1 ? "s" : ""}
+                                {item.pendingOrders.length > 0 && (
+                                  <span className="text-orange-600 ml-2">
+                                    ⏳ {item.pendingOrders.length} can cancel
+                                  </span>
+                                )}
+                                {item.inProgressOrders.length > 0 && (
+                                  <span className="text-red-600 ml-2">
+                                    🔄 {item.inProgressOrders.length} locked
+                                  </span>
+                                )}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xl font-bold text-green-600">
+                                {formatCurrency(completedAmount)}
+                              </p>
+                              {incompleteAmount > 0 && (
+                                <p className="text-sm text-orange-600 mt-1">
+                                  -{formatCurrency(incompleteAmount)}
+                                </p>
+                              )}
+                              {isSelected && (
+                                <Check size={20} className="text-green-600 mt-2" />
+                              )}
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* Order Details when selected */}
+                        {isSelected && (
+                          <div className="bg-gray-50 p-4 rounded-xl mt-2 border border-green-200">
+                            {/* Completed Orders */}
+                            {item.completedOrders.length > 0 && (
+                              <div className="mb-4">
+                                <h4 className="font-bold text-green-700 mb-3 flex items-center gap-2">
+                                  <Check size={18} />
+                                  Completed Orders ({item.completedOrders.length})
+                                </h4>
+                                <div className="bg-white rounded-lg p-3 space-y-2">
+                                  {item.completedOrders.map((order) => (
+                                    <div key={order.orderId} className="border-b border-gray-200 pb-2 last:border-b-0">
+                                      <p className="text-xs text-gray-500 font-semibold mb-1">Order {order.orderId.slice(-5)}</p>
+                                      <div className="space-y-1">
+                                        {order.items.map((orderItem, idx) => (
+                                          <div
+                                            key={`${order.orderId}-${idx}`}
+                                            className="flex justify-between text-sm text-gray-700"
+                                          >
+                                            <span>{orderItem.name} x{orderItem.quantity}</span>
+                                            <span className="font-semibold">{orderItem.price}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      <div className="flex justify-between text-sm mt-2 pt-2 border-t border-gray-100">
+                                        <span className="font-semibold">Subtotal:</span>
+                                        <span className="font-bold text-green-600">{formatCurrency(order.totalPrice)}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Incomplete Orders */}
+                            {(item.pendingOrders.length > 0 || item.inProgressOrders.length > 0) && (
+                              <div className="mb-4">
+                                <h4 className="font-bold text-orange-700 mb-3 flex items-center gap-2">
+                                  <AlertCircle size={18} />
+                                  Awaiting ({item.pendingOrders.length} pending, {item.inProgressOrders.length} in progress)
+                                </h4>
+                                <div className="bg-blue-50 border border-blue-200 p-2 rounded-lg mb-3 text-xs text-blue-800">
+                                  ℹ️ Only <span className="font-semibold">Pending</span> orders can be cancelled. <span className="font-semibold">In Progress</span> orders are locked.
+                                </div>
+                                <div className="bg-orange-50 rounded-lg p-3 space-y-3 border border-orange-200">
+                                  {[...item.pendingOrders, ...item.inProgressOrders].map((order) => (
+                                    <div key={order.orderId} className="border-b border-orange-200 pb-3 last:border-b-0">
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs text-orange-600 font-semibold">Order {order.orderId.slice(-5)}</p>
+                                          <span className="text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded mt-1 inline-block">
+                                            {order.status === "pending" ? "Pending" : "In Progress"}
+                                          </span>
+                                        </div>
+                                        <button
+                                          onClick={() => {
+                                            if (order.status === "pending") {
+                                              handleDeleteOrderInQuickPayment(order.orderId);
+                                            }
+                                          }}
+                                          disabled={order.status !== "pending"}
+                                          className={`p-1 rounded transition-colors ${
+                                            order.status === "pending"
+                                              ? "text-red-600 hover:bg-red-100 cursor-pointer"
+                                              : "text-gray-400 cursor-not-allowed opacity-50"
+                                          }`}
+                                          title={
+                                            order.status === "pending"
+                                              ? "Delete this order"
+                                              : "Cannot delete: Order in progress"
+                                          }
+                                        >
+                                          <X size={18} />
+                                        </button>
+                                      </div>
+                                      <div className="space-y-1 ml-2">
+                                        {order.items.map((orderItem, idx) => (
+                                          <div
+                                            key={`${order.orderId}-${idx}`}
+                                            className="flex justify-between text-sm text-gray-700"
+                                          >
+                                            <span>{orderItem.name} x{orderItem.quantity}</span>
+                                            <span className="font-semibold">{orderItem.price}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      <div className="flex justify-between text-sm mt-2 pt-2 border-t border-orange-200">
+                                        <span className="font-semibold">Subtotal:</span>
+                                        <span className="font-bold text-orange-600">{formatCurrency(order.totalPrice)}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Total Summary */}
+                            <div className="bg-white rounded-lg p-3 border border-green-200">
+                              <div className="flex justify-between mb-2">
+                                <span className="text-sm text-gray-600">Completed:</span>
+                                <span className="font-semibold text-green-600">{formatCurrency(completedAmount)}</span>
+                              </div>
+                              {incompleteAmount > 0 && (
+                                <div className="flex justify-between text-sm mb-2 pb-2 border-b border-gray-200">
+                                  <span className="text-gray-600">Pending (to cancel):</span>
+                                  <span className="font-semibold text-orange-600">-{formatCurrency(incompleteAmount)}</span>
+                                </div>
+                              )}
+                              <div className="flex justify-between">
+                                <span className="font-bold text-black">Final Total:</span>
+                                <span className="font-bold text-lg text-green-600">{formatCurrency(completedAmount)}</span>
+                              </div>
+                            </div>
+
+                            {canPayNow && (
+                              <p className="text-sm text-green-600 font-semibold mt-3 text-center bg-green-50 p-2 rounded">
+                                ✓ Ready to process payment
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-12">
+                    <AlertCircle size={40} className="mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-600">
+                      {quickPaymentSearch
+                        ? "No tables match your search"
+                        : "No tables with completed orders"}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200">
+                <button
+                  onClick={() => setShowQuickPaymentModal(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    if (selectedQuickPaymentTableId) {
+                      const selectedTable = filteredQuickPaymentTables.find((t) => t.tableId === selectedQuickPaymentTableId);
+                      if (selectedTable && selectedTable.completedOrders.length > 0) {
+                        handleQuickPayment(selectedQuickPaymentTableId);
+                      }
+                    }
+                  }}
+                  disabled={!selectedQuickPaymentTableId || !filteredQuickPaymentTables.find((t) => t.tableId === selectedQuickPaymentTableId)?.completedOrders.length}
+                  className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 ${
+                    selectedQuickPaymentTableId && filteredQuickPaymentTables.find((t) => t.tableId === selectedQuickPaymentTableId)?.completedOrders.length
+                      ? "bg-green-600 text-white hover:bg-green-700 cursor-pointer"
+                      : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  }`}
+                >
+                  <span>💳 Process Payment</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
