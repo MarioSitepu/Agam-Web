@@ -5,16 +5,18 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AVAILABLE_TABLES } from "@/components/TableSelector";
-import { ArrowLeft, Clock, AlertCircle, Check, X } from "lucide-react";
+import { ArrowLeft, Clock, AlertCircle, Check, X, ArrowRight } from "lucide-react";
 import { useCashierOrders } from "@/context/CashierOrdersContext";
 
 export default function CashierDashboard() {
   // Get orders from context
-  const { orders, paidOrders, updateOrderStatus, removeOrder, processPaidOrders } = useCashierOrders();
+  const { orders, paidOrders, updateOrderStatus, removeOrder, processPaidOrders, changeTableForOrders } = useCashierOrders();
 
   const [activeTab, setActiveTab] = useState<"orders" | "history">("orders");
   const [paymentTableId, setPaymentTableId] = useState<string | null>(null);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [showChangeTableModal, setShowChangeTableModal] = useState(false);
+  const [selectedTableIdForChange, setSelectedTableIdForChange] = useState<string | null>(null);
 
   // Group orders by tableId
   const groupedOrders = useMemo(() => {
@@ -67,6 +69,28 @@ export default function CashierDashboard() {
 
   const handlePayment = (tableId: string) => {
     setPaymentTableId(tableId);
+  };
+
+  // Get available tables (tables not in groupedOrders)
+  const availableTables = useMemo(() => {
+    const occupiedTableIds = Object.keys(groupedOrders);
+    return AVAILABLE_TABLES.filter((table) => !occupiedTableIds.includes(table.id));
+  }, [groupedOrders]);
+
+  const handleChangeTable = (fromTableId: string) => {
+    setSelectedTableIdForChange(fromTableId);
+    setShowChangeTableModal(true);
+  };
+
+  const handleConfirmTableChange = (newTableId: string) => {
+    if (selectedTableIdForChange) {
+      const newTableInfo = AVAILABLE_TABLES.find((t) => t.id === newTableId);
+      if (newTableInfo) {
+        changeTableForOrders(selectedTableIdForChange, newTableId, newTableInfo.label);
+        setShowChangeTableModal(false);
+        setSelectedTableIdForChange(null);
+      }
+    }
   };
 
   const formatTime = (date: Date) => {
@@ -164,7 +188,7 @@ export default function CashierDashboard() {
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
                 <p className="text-gray-600 text-sm font-semibold mb-2">Active Tables</p>
                 <p className="text-3xl sm:text-4xl font-bold text-black">{stats.totalOrders}</p>
-                <p className="text-gray-500 text-sm mt-3">{23 - stats.totalOrders} tables available</p>
+                <p className="text-gray-500 text-sm mt-3">{AVAILABLE_TABLES.length - stats.totalOrders} tables available</p>
               </div>
 
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
@@ -198,9 +222,18 @@ export default function CashierDashboard() {
                           <div>
                             <h3 className="text-2xl sm:text-3xl font-bold text-black">{firstOrder.tableLabel}</h3>
                           </div>
-                          <span className="text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                            {tableOrders.length} order{tableOrders.length > 1 ? "s" : ""}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleChangeTable(tableId)}
+                              className="px-3 py-1 text-xs font-bold text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-full transition-all flex items-center gap-1"
+                            >
+                              <ArrowRight size={12} />
+                              <span>Change</span>
+                            </button>
+                            <span className="text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                              {tableOrders.length} order{tableOrders.length > 1 ? "s" : ""}
+                            </span>
+                          </div>
                         </div>
 
                         {/* Active Orders Section */}
@@ -371,7 +404,7 @@ export default function CashierDashboard() {
                   </div>
 
                   {/* History Grid - Grouped by Payment Session */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-max">
                     {Object.entries(
                       paidOrders.reduce(
                         (acc, order) => {
@@ -385,6 +418,7 @@ export default function CashierDashboard() {
                       )
                     ).map(([paymentSessionId, sessionOrders]) => {
                       const firstOrder = sessionOrders[0];
+                      const firstOrderTime = firstOrder.firstOrderTime;
                       const invoiceTotal = sessionOrders.reduce((sum, order) => sum + order.totalPrice, 0);
                       const paymentTime = firstOrder.paidAt;
 
@@ -394,10 +428,16 @@ export default function CashierDashboard() {
                           <div className="flex items-start justify-between mb-4 pb-4 border-b-2 border-green-200">
                             <div>
                               <h3 className="text-2xl sm:text-3xl font-bold text-black">{firstOrder.tableLabel}</h3>
-                              <p className="text-gray-600 text-sm flex items-center gap-1 mt-1">
-                                <Clock size={14} />
-                                {new Date(paymentTime).toLocaleDateString("id-ID")} at {new Date(paymentTime).toLocaleTimeString("id-ID")}
-                              </p>
+                              <div className="space-y-1 mt-2">
+                                <p className="text-gray-600 text-sm flex items-center gap-1">
+                                  <Clock size={14} />
+                                  <span className="font-semibold">Started:</span> {new Date(firstOrderTime).toLocaleDateString("id-ID")} {new Date(firstOrderTime).toLocaleTimeString("id-ID")}
+                                </p>
+                                <p className="text-gray-600 text-sm flex items-center gap-1">
+                                  <Clock size={14} />
+                                  <span className="font-semibold">Paid:</span> {new Date(paymentTime).toLocaleDateString("id-ID")} {new Date(paymentTime).toLocaleTimeString("id-ID")}
+                                </p>
+                              </div>
                             </div>
                             <span className="text-xs font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full">
                               Invoice #{paymentSessionId.slice(-5)}
@@ -494,6 +534,63 @@ export default function CashierDashboard() {
               
               <h3 className="text-2xl sm:text-3xl font-bold text-black mb-2">Payment Successful!</h3>
               <p className="text-gray-600 text-sm sm:text-base">Order has been paid and removed from queue</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change Table Modal */}
+      {showChangeTableModal && selectedTableIdForChange && (
+        <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl sm:text-3xl font-bold text-black">Select New Table</h3>
+              <button
+                onClick={() => {
+                  setShowChangeTableModal(false);
+                  setSelectedTableIdForChange(null);
+                }}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <p className="text-gray-600 mb-6">
+              Available tables for relocation from {selectedTableIdForChange}:
+            </p>
+
+            {/* Available Tables Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+              {availableTables.map((table) => (
+                <button
+                  key={table.id}
+                  onClick={() => handleConfirmTableChange(table.id)}
+                  className="group p-4 rounded-xl border-2 border-gray-200 hover:border-primary-brown bg-white hover:bg-primary-brown/5 transition-all"
+                >
+                  <p className="font-bold text-black text-lg mb-1">{table.label}</p>
+                  <p className="text-gray-600 text-sm">{table.seats} seats</p>
+                </button>
+              ))}
+            </div>
+
+            {availableTables.length === 0 && (
+              <div className="text-center py-8">
+                <AlertCircle size={40} className="mx-auto text-gray-400 mb-3" />
+                <p className="text-gray-600">No available tables at the moment</p>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowChangeTableModal(false);
+                  setSelectedTableIdForChange(null);
+                }}
+                className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition-colors"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

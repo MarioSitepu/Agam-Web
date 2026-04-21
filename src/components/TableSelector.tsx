@@ -23,27 +23,51 @@ import { QrCode, ArrowRight } from "lucide-react";
  */
 
 export const AVAILABLE_TABLES = [
+  // 2-seat tables
   { id: "table-1", label: "Table 1", seats: 2 },
-  { id: "table-2", label: "Table 2", seats: 4 },
-  // Add more tables as needed
+  { id: "table-2", label: "Table 2", seats: 2 },
+  { id: "table-3", label: "Table 3", seats: 2 },
+  { id: "table-4", label: "Table 4", seats: 2 },
+  { id: "table-5", label: "Table 5", seats: 2 },
+  { id: "table-6", label: "Table 6", seats: 2 },
+  // 4-seat tables
+  { id: "table-7", label: "Table 7", seats: 4 },
+  { id: "table-8", label: "Table 8", seats: 4 },
+  { id: "table-9", label: "Table 9", seats: 4 },
+  { id: "table-10", label: "Table 10", seats: 4 },
+  { id: "table-11", label: "Table 11", seats: 4 },
+  { id: "table-12", label: "Table 12", seats: 4 },
+  // 6-seat tables
+  { id: "table-13", label: "Table 13", seats: 6 },
+  { id: "table-14", label: "Table 14", seats: 6 },
+  { id: "table-15", label: "Table 15", seats: 6 },
+  { id: "table-16", label: "Table 16", seats: 6 },
+  { id: "table-17", label: "Table 17", seats: 6 },
+  { id: "table-18", label: "Table 18", seats: 6 },
+  // 8-seat tables
+  { id: "table-19", label: "Table 19", seats: 8 },
+  { id: "table-20", label: "Table 20", seats: 8 },
+  { id: "table-21", label: "Table 21", seats: 8 },
+  { id: "table-22", label: "Table 22", seats: 8 },
+  { id: "table-23", label: "Table 23", seats: 8 },
 ];
 
 export default function TableSelector() {
   return (
-    <div className="min-h-screen bg-white pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 md:px-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-white pt-16 sm:pt-20 pb-6 sm:pb-8 px-4 sm:px-6 md:px-8">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-black font-script text-4xl sm:text-5xl md:text-6xl mb-2 sm:mb-3">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-black font-script text-3xl sm:text-4xl md:text-5xl mb-1 sm:mb-2">
             Select Table
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm md:text-base px-2">
+          <p className="text-gray-600 text-xs sm:text-sm px-2">
             Choose your table to start ordering
           </p>
         </div>
 
         {/* Table Selection Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
           {AVAILABLE_TABLES.map((table) => (
             <Link
               key={table.id}
@@ -51,43 +75,43 @@ export default function TableSelector() {
               className="group relative overflow-hidden"
             >
               {/* Table Card */}
-              <div className="bg-bg-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 hover:border-primary-brown/50 transition-all duration-300 flex flex-col items-center justify-center text-center h-full hover:shadow-2xl hover:shadow-primary-brown/20">
+              <div className="bg-bg-dark rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-white/10 hover:border-primary-brown/50 transition-all duration-300 flex flex-col items-center justify-center text-center hover:shadow-lg hover:shadow-primary-brown/20">
                 {/* QR Code Icon */}
-                <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl bg-primary-brown/20 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary-brown/30 transition-colors">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-lg bg-primary-brown/20 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-primary-brown/30 transition-colors">
                   <QrCode
-                    className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-primary-brown group-hover:text-primary-brown transition-colors"
+                    className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-primary-brown group-hover:text-primary-brown transition-colors"
                   />
                 </div>
 
                 {/* Table Label */}
-                <h2 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider mb-1 sm:mb-2">
+                <h2 className="text-white text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-wide mb-1">
                   {table.label}
                 </h2>
 
                 {/* Seats Info */}
-                <p className="text-secondary-gold text-xs sm:text-sm md:text-base font-semibold mb-4 sm:mb-6">
-                  Seats for {table.seats}
+                <p className="text-secondary-gold text-xs sm:text-sm font-semibold mb-2 sm:mb-3">
+                  {table.seats} seats
                 </p>
 
                 {/* Bottom: Arrow indicator */}
-                <div className="mt-auto pt-3 sm:pt-4 flex items-center gap-2 text-secondary-gold group-hover:gap-3 transition-all">
-                  <span className="text-xs md:text-sm font-bold uppercase tracking-wider">
-                    Order Now
+                <div className="flex items-center gap-1 text-secondary-gold group-hover:gap-2 transition-all">
+                  <span className="text-xs font-bold uppercase tracking-wide">
+                    Order
                   </span>
                   <ArrowRight
-                    className="w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform"
+                    className="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
                   />
                 </div>
               </div>
 
               {/* Hover Background Effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-brown/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-brown/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
             </Link>
           ))}
         </div>
 
         {/* Info Text */}
-        <div className="mt-8 sm:mt-12 text-center">
+        <div className="mt-6 sm:mt-8 text-center">
           <p className="text-gray-600 text-xs sm:text-sm px-4">
             💡 Or scan the QR code on your table to order directly
           </p>

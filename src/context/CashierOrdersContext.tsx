@@ -23,6 +23,7 @@ export interface PaidOrder extends CashierTableOrder {
   paidAt: Date;
   paymentMethod?: string;
   paymentSessionId: string;
+  firstOrderTime: Date;
 }
 
 interface CashierOrdersContextType {
@@ -34,6 +35,7 @@ interface CashierOrdersContextType {
   clearCompletedOrders: () => void;
   processPaidOrders: (orderIds: string[]) => void;
   clearPaidOrders: () => void;
+  changeTableForOrders: (fromTableId: string, toTableId: string, toTableLabel: string) => void;
 }
 
 const CashierOrdersContext = createContext<CashierOrdersContextType | undefined>(undefined);
@@ -41,6 +43,7 @@ const CashierOrdersContext = createContext<CashierOrdersContextType | undefined>
 export function CashierOrdersProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<CashierTableOrder[]>([]);
   const [paidOrders, setPaidOrders] = useState<PaidOrder[]>([]);
+  const [tableFirstOrderTimes, setTableFirstOrderTimes] = useState<Record<string, Date>>({});
 
   const generateOrderId = (): string => {
     return `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -57,6 +60,18 @@ export function CashierOrdersProvider({ children }: { children: ReactNode }) {
       timestamp: new Date(),
       status: "pending" as const,
     };
+    
+    // Track first order time for this table if not already tracked
+    setTableFirstOrderTimes((prev) => {
+      if (!prev[order.tableId]) {
+        return {
+          ...prev,
+          [order.tableId]: new Date(),
+        };
+      }
+      return prev;
+    });
+    
     setOrders((prev) => [...prev, newOrder]);
   };
 
@@ -85,6 +100,7 @@ export function CashierOrdersProvider({ children }: { children: ReactNode }) {
           paidAt: new Date(),
           paymentMethod: "QR Payment",
           paymentSessionId,
+          firstOrderTime: tableFirstOrderTimes[order.tableId] || new Date(),
         })),
         ...prev,
       ]);
@@ -95,6 +111,30 @@ export function CashierOrdersProvider({ children }: { children: ReactNode }) {
 
   const clearPaidOrders = () => {
     setPaidOrders([]);
+  };
+
+  const changeTableForOrders = (fromTableId: string, toTableId: string, toTableLabel: string) => {
+    // Update all orders from the old table to the new table
+    setOrders((prev) =>
+      prev.map((order) =>
+        order.tableId === fromTableId
+          ? { ...order, tableId: toTableId, tableLabel: toTableLabel }
+          : order
+      )
+    );
+    
+    // Update first order time mapping
+    setTableFirstOrderTimes((prev) => {
+      const fromTableFirstTime = prev[fromTableId];
+      if (fromTableFirstTime) {
+        return {
+          ...prev,
+          [toTableId]: fromTableFirstTime,
+          [fromTableId]: undefined,
+        };
+      }
+      return prev;
+    });
   };
 
   return (
@@ -108,6 +148,7 @@ export function CashierOrdersProvider({ children }: { children: ReactNode }) {
         clearCompletedOrders,
         processPaidOrders,
         clearPaidOrders,
+        changeTableForOrders,
       }}
     >
       {children}
