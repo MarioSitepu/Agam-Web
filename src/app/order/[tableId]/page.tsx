@@ -54,7 +54,23 @@ export default function OrderPageWithTable() {
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
 
   // Get categories from menu data
-  const categories = menuData;
+  const allMenuItems = menuData
+    .flatMap((category) => category.items)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const categoriesWithAll: typeof menuData = [
+    {
+      id: "all-menu",
+      name: "Semua Menu",
+      items: allMenuItems,
+    },
+    ...menuData.map((category) => ({
+      ...category,
+      items: [...category.items].sort((a, b) => a.name.localeCompare(b.name)),
+    })),
+  ];
+
+  const categories = categoriesWithAll;
   const displayCategory = activeCategory
     ? categories.find((c) => c.id === activeCategory)
     : categories[0];
@@ -190,7 +206,7 @@ export default function OrderPageWithTable() {
 
               {/* Menu Items Responsive Grid */}
               {displayCategory && displayCategory.items.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                   {displayCategory.items.map((item, idx) => (
                     <MenuItemCard
                       key={`${displayCategory.id}_${idx}`}

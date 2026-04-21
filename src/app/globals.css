@@ -20,8 +20,13 @@
   --font-script: var(--font-playball);
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-montserrat), sans-serif;
+  overflow-x: hidden;
 }

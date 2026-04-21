@@ -4,15 +4,15 @@ import { ShoppingBag } from "lucide-react";
 
 export default function PromoBanner() {
   return (
-    <div className="bg-cream py-12 md:py-20 px-6 md:px-8 relative overflow-hidden group">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 md:gap-8 relative z-10 text-center md:text-left">
+    <div className="bg-cream py-8 sm:py-12 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden group">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-10 md:gap-8 relative z-10 text-center md:text-left">
         <div className="flex flex-col">
-          <h2 className="text-primary-brown font-script text-5xl sm:text-7xl md:text-8xl mb-2">20% Off</h2>
-          <p className="text-black text-xl md:text-2xl font-bold tracking-[0.2em] md:tracking-widest uppercase">Your First Order</p>
+          <h2 className="text-primary-brown font-script text-4xl sm:text-6xl md:text-7xl lg:text-8xl mb-1 sm:mb-2">20% Off</h2>
+          <p className="text-black text-lg sm:text-xl md:text-2xl font-bold tracking-[0.1em] sm:tracking-[0.2em] md:tracking-widest uppercase">Your First Order</p>
         </div>
         
-        <button className="w-full md:w-auto bg-primary-brown text-white px-10 md:px-12 py-4 md:py-5 rounded-full text-xl md:text-2xl font-bold shadow-2xl hover:bg-opacity-90 transition-all transform hover:scale-105 flex items-center justify-center gap-4 active:scale-95">
-          <ShoppingBag size={24} className="md:w-7 md:h-7" />
+        <button className="w-full md:w-auto bg-primary-brown text-white px-6 sm:px-10 md:px-12 py-3 sm:py-4 md:py-5 rounded-full text-lg sm:text-xl md:text-2xl font-bold shadow-2xl hover:bg-opacity-90 transition-all transform hover:scale-105 flex items-center justify-center gap-3 sm:gap-4 active:scale-95">
+          <ShoppingBag className="w-6 h-6 sm:w-6 sm:h-6 md:w-7 md:h-7" />
           Shop Now
         </button>
       </div>
