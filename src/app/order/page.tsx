@@ -19,7 +19,9 @@ export default function OrderLandingPage() {
       <Navbar />
       
       {/* Table Selection Component */}
-      <TableSelector />
+      <div className="pt-16 sm:pt-20 flex-1">
+        <TableSelector />
+      </div>
       
       <Footer />
     </div>

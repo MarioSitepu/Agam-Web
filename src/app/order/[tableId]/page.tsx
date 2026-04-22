@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -12,8 +12,9 @@ import OrderReviewModal from "@/components/OrderReviewModal";
 import OrderConfirmationModal from "@/components/OrderConfirmationModal";
 import { menuData, MenuItem } from "@/data/menuData";
 import { useOrder } from "@/context/OrderContext";
+import { useCashierOrders } from "@/context/CashierOrdersContext";
 import { AVAILABLE_TABLES } from "@/components/TableSelector";
-import { ArrowLeft, QrCode } from "lucide-react";
+import { ArrowLeft, QrCode, X, AlertCircle } from "lucide-react";
 
 /**
  * Order Page - Full-featured digital menu ordering interface for specific table
@@ -40,6 +41,10 @@ export default function OrderPageWithTable() {
   const router = useRouter();
   const tableId = params.tableId as string;
 
+  // Get order contexts
+  const { orderItems, getTotalPrice, clearOrder } = useOrder();
+  const { addOrder, registerTableName, getTableName } = useCashierOrders();
+
   // Get table info from AVAILABLE_TABLES
   const tableInfo = AVAILABLE_TABLES.find((t) => t.id === tableId);
   const tableLabel = tableInfo?.label || "Unknown Table";
@@ -52,12 +57,40 @@ export default function OrderPageWithTable() {
   const [showOrderReview, setShowOrderReview] = useState(false);
   const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [nameValidated, setNameValidated] = useState(false);
 
   // Get categories from menu data
-  const categories = menuData;
+  const allMenuItems = menuData
+    .flatMap((category) => category.items)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const categoriesWithAll: typeof menuData = [
+    {
+      id: "all-menu",
+      name: "Semua Menu",
+      items: allMenuItems,
+    },
+    ...menuData.map((category) => ({
+      ...category,
+      items: [...category.items].sort((a, b) => a.name.localeCompare(b.name)),
+    })),
+  ];
+
+  const categories = categoriesWithAll;
   const displayCategory = activeCategory
     ? categories.find((c) => c.id === activeCategory)
     : categories[0];
+
+  /**
+   * Show name validation modal on page load
+   */
+  useEffect(() => {
+    // Always show name validation modal (for both first order and reorder)
+    setShowNameModal(true);
+  }, [tableId]);
 
   /**
    * Handle menu item click - open customization modal
@@ -82,12 +115,30 @@ export default function OrderPageWithTable() {
   const handleOrderConfirm = async () => {
     setIsSubmittingOrder(true);
     try {
-      // TODO: Send order to backend with tableId
-      console.log(`Submitting order for ${tableLabel}`, {
-        tableId,
-        tableLabel,
-        // orderItems from useOrder hook
-      });
+      // Calculate order total
+      const totalPrice = getTotalPrice();
+
+      // Add order to cashier dashboard
+      // Name is already validated at page load, so we can directly add the order
+      addOrder(
+        {
+          tableId,
+          tableLabel,
+          items: orderItems.map((item) => ({
+            name: item.menuItemName,
+            price: item.menuItemPrice,
+            quantity: item.quantity,
+            customizations: item.customizations.map((c) => `${c.label}: ${c.value}`),
+          })),
+          totalPrice,
+          status: "pending",
+        },
+        customerName
+      );
+
+      // Clear the order from current context
+      clearOrder();
+
       // Simulate processing
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -97,6 +148,32 @@ export default function OrderPageWithTable() {
     } finally {
       setIsSubmittingOrder(false);
     }
+  };
+
+  /**
+   * Handle name validation
+   * Validates against existing table name or registers new name
+   */
+  const handleValidateName = () => {
+    if (!customerName.trim()) {
+      setNameError("Nama tidak boleh kosong");
+      return;
+    }
+
+    // Use registerTableName to validate
+    // It will check if name matches existing registered name
+    const result = registerTableName(tableId, customerName);
+    
+    if (!result.success) {
+      // Name mismatch or validation failed
+      setNameError(result.message);
+      return;
+    }
+
+    // Name validation successful
+    setNameValidated(true);
+    setNameError("");
+    setShowNameModal(false);
   };
 
   /**
@@ -118,9 +195,10 @@ export default function OrderPageWithTable() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Main Content */}
-      <main className="pt-20 md:pt-24 pb-4 md:pb-8 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      {/* Main Content - Only show after name validation */}
+      {nameValidated && (
+        <main className="pt-20 md:pt-24 pb-4 md:pb-8 px-4 md:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
           {/* Table Selection Banner + Back Button */}
           <div className="mb-6 md:mb-8 lg:mb-10 bg-gradient-to-r from-primary-brown/10 to-transparent rounded-2xl p-4 md:p-6 border border-primary-brown/20">
             <div className="flex items-center justify-between gap-4">
@@ -190,7 +268,7 @@ export default function OrderPageWithTable() {
 
               {/* Menu Items Responsive Grid */}
               {displayCategory && displayCategory.items.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                   {displayCategory.items.map((item, idx) => (
                     <MenuItemCard
                       key={`${displayCategory.id}_${idx}`}
@@ -221,6 +299,7 @@ export default function OrderPageWithTable() {
           </div>
         </div>
       </main>
+      )}
 
       {/* Customization Modal */}
       <CustomizationModal
@@ -249,6 +328,82 @@ export default function OrderPageWithTable() {
         tableLabel={tableLabel}
         onClose={handleConfirmationDone}
       />
+
+      {/* Customer Name Registration Modal */}
+      {showNameModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 md:p-8 shadow-2xl">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold text-primary-brown mb-2">
+                Meja Atas Nama
+              </h2>
+              <p className="text-gray-600 text-sm">
+                Masukkan nama untuk {tableLabel}
+              </p>
+            </div>
+
+            {/* Error Message */}
+            {nameError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex gap-3">
+                <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-red-700 text-sm">{nameError}</p>
+              </div>
+            )}
+
+            {/* Name Input */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Nama Anda
+              </label>
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => {
+                  setCustomerName(e.target.value);
+                  setNameError("");
+                }}
+                placeholder="Masukkan nama"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-brown focus:ring-1 focus:ring-primary-brown text-base"
+                maxLength={50}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleValidateName();
+                  }
+                }}
+                autoFocus
+              />
+              <p className="text-gray-500 text-xs mt-2">
+                {customerName.length}/50 karakter
+              </p>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowNameModal(false);
+                  setNameError("");
+                }}
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleValidateName}
+                className="flex-1 px-4 py-3 bg-primary-brown text-white rounded-lg font-semibold hover:bg-primary-brown/90 transition-colors text-sm"
+              >
+                Lanjut Pesan
+              </button>
+            </div>
+
+            {/* Info Text */}
+            <p className="text-center text-xs text-gray-500 mt-4">
+              Nama ini diperlukan untuk keamanan pesanan
+            </p>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

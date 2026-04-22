@@ -31,9 +31,9 @@ export default function MenuItemCard({
   isLoading = false,
 }: MenuItemCardProps) {
   return (
-    <div className="bg-bg-dark rounded-3xl p-5 md:p-6 flex flex-col items-start group relative h-full transition-all hover:shadow-2xl hover:shadow-primary-brown/10">
+    <div className="bg-bg-dark rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 flex flex-col items-start group relative h-full transition-all hover:shadow-2xl hover:shadow-primary-brown/10">
       {/* Image Container - Consistent with ProductGrid styling */}
-      <div className="relative w-full aspect-square mb-4 md:mb-6 overflow-hidden rounded-2xl">
+      <div className="relative w-full aspect-square mb-3 sm:mb-4 md:mb-6 overflow-hidden rounded-xl sm:rounded-2xl">
         <Image
           src={item.image || "/placeholder-food.png"}
           alt={item.name}
@@ -47,22 +47,22 @@ export default function MenuItemCard({
       {/* Content Section */}
       <div className="flex-1 w-full flex flex-col">
         {/* Menu Item Name */}
-        <h3 className="text-white text-lg md:text-xl font-bold uppercase tracking-wider mb-2 line-clamp-2">
+        <h3 className="text-white text-base sm:text-lg md:text-xl font-bold uppercase tracking-wide sm:tracking-wider mb-2 line-clamp-2">
           {item.name}
         </h3>
 
         {/* Description (if available) */}
         {item.description && (
-          <p className="text-gray-400 text-xs md:text-sm mb-3 line-clamp-2 flex-grow">
+          <p className="text-gray-400 text-xs md:text-sm mb-2 sm:mb-3 line-clamp-2 flex-grow">
             {item.description}
           </p>
         )}
 
         {/* Footer: Price and Button */}
-        <div className="w-full flex justify-between items-end gap-3 pt-2 border-t border-white/10">
+        <div className="w-full flex justify-between items-end gap-2 sm:gap-3 pt-2 border-t border-white/10">
           {/* Price Display */}
           <div className="flex flex-col">
-            <span className="text-secondary-gold text-xl md:text-2xl font-bold">
+            <span className="text-secondary-gold text-lg sm:text-xl md:text-2xl font-bold">
               {item.price}
             </span>
           </div>
@@ -71,13 +71,12 @@ export default function MenuItemCard({
           <button
             onClick={() => onOrderClick(item)}
             disabled={isLoading}
-            className="bg-primary-brown text-white p-3 md:p-4 rounded-full shadow-lg hover:bg-opacity-80 transition-all flex items-center justify-center active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
+            className="bg-primary-brown text-white p-2.5 sm:p-3 md:p-4 rounded-full shadow-lg hover:bg-opacity-80 transition-all flex items-center justify-center active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
             aria-label={`Add ${item.name} to order`}
             title={`Order ${item.name}`}
           >
             <ShoppingCart
-              size={20}
-              className="md:w-6 md:h-6 group-hover/btn:rotate-12 transition-transform"
+              className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover/btn:rotate-12 transition-transform"
             />
           </button>
         </div>

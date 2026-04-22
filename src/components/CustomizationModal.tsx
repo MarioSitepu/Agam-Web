@@ -158,36 +158,36 @@ export default function CustomizationModal({
       />
 
       {/* Modal Container */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 pointer-events-none">
         <div
-          className="bg-[#1A1A1A] rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl pointer-events-auto border border-white/10"
+          className="bg-[#1A1A1A] rounded-2xl sm:rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl pointer-events-auto border border-white/10"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="sticky top-0 bg-[#1A1A1A] border-b border-white/10 px-6 py-4 flex items-center justify-between z-10">
-            <h2 className="text-white text-xl font-bold uppercase tracking-wider">
+          <div className="sticky top-0 bg-[#1A1A1A] border-b border-white/10 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between z-10">
+            <h2 className="text-white text-lg sm:text-xl font-bold uppercase tracking-wider">
               Customize Order
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors p-1"
+              className="text-gray-400 hover:text-white transition-colors p-1 flex-shrink-0"
               aria-label="Close modal"
             >
-              <X size={24} />
+              <X className="w-6 h-6" />
             </button>
           </div>
 
           {/* Content */}
-          <div className="px-6 py-6 space-y-6">
+          <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
             {/* Item Summary */}
-            <div className="border-b border-white/10 pb-6">
-              <h3 className="text-white text-lg font-bold uppercase mb-2">
+            <div className="border-b border-white/10 pb-4 sm:pb-6">
+              <h3 className="text-white text-base sm:text-lg font-bold uppercase mb-1 sm:mb-2 line-clamp-2">
                 {item.name}
               </h3>
               {item.description && (
-                <p className="text-gray-400 text-sm mb-4">{item.description}</p>
+                <p className="text-gray-400 text-xs sm:text-sm mb-2 sm:mb-4">{item.description}</p>
               )}
-              <p className="text-secondary-gold text-2xl font-bold">
+              <p className="text-secondary-gold text-xl sm:text-2xl font-bold">
                 {item.price}
               </p>
             </div>
@@ -197,15 +197,15 @@ export default function CustomizationModal({
               <label className="text-white text-sm font-bold uppercase tracking-widest mb-3 block">
                 Quantity
               </label>
-              <div className="flex items-center gap-4 bg-[#111111] rounded-2xl w-fit p-2">
+              <div className="flex items-center gap-2 sm:gap-4 bg-[#111111] rounded-xl sm:rounded-2xl w-fit p-1.5 sm:p-2">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="bg-primary-brown text-white p-2 rounded-lg hover:bg-opacity-80 transition-all"
                   aria-label="Decrease quantity"
                 >
-                  <Minus size={18} />
+                  <Minus className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </button>
-                <span className="text-white text-xl font-bold min-w-12 text-center">
+                <span className="text-white text-lg sm:text-xl font-bold min-w-10 text-center">
                   {quantity}
                 </span>
                 <button
@@ -213,20 +213,20 @@ export default function CustomizationModal({
                   className="bg-primary-brown text-white p-2 rounded-lg hover:bg-opacity-80 transition-all"
                   aria-label="Increase quantity"
                 >
-                  <Plus size={18} />
+                  <Plus className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </button>
               </div>
             </div>
 
             {/* Customization Options */}
             <div>
-              <label className="text-white text-sm font-bold uppercase tracking-widest mb-4 block">
+              <label className="text-white text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 sm:mb-4 block">
                 Customizations
               </label>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {DEFAULT_CUSTOMIZATIONS.map((category) => (
-                  <div key={category.id} className="bg-[#111111] rounded-2xl p-4">
-                    <p className="text-secondary-gold text-xs font-bold uppercase tracking-wider mb-3">
+                  <div key={category.id} className="bg-[#111111] rounded-xl sm:rounded-2xl p-3 sm:p-4">
+                    <p className="text-secondary-gold text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2 sm:mb-3">
                       {category.label}
                     </p>
                     <div className="space-y-2">
@@ -244,11 +244,9 @@ export default function CustomizationModal({
                             onChange={() =>
                               handleCustomizationChange(category.id, option)
                             }
-                            className="w-4 h-4 accent-primary-brown cursor-pointer"
+                            className="w-4 h-4 accent-primary-brown cursor-pointer flex-shrink-0"
                           />
-                          <span className="text-white text-sm group-hover:text-secondary-gold transition-colors">
-                            {option}
-                          </span>
+                          <span className="text-white text-xs sm:text-sm group-hover:text-secondary-gold transition-colors">{option}</span>
                         </label>
                       ))}
                     </div>
@@ -259,23 +257,23 @@ export default function CustomizationModal({
 
             {/* Special Notes / Instructions */}
             <div>
-              <label className="text-white text-sm font-bold uppercase tracking-widest mb-3 block">
+              <label className="text-white text-xs sm:text-sm font-bold uppercase tracking-widest mb-2 sm:mb-3 block">
                 Special Notes (Optional)
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="e.g., 'No onion, extra spicy, no sesame'"
-                className="w-full bg-[#111111] text-white rounded-2xl px-4 py-3 border border-white/10 focus:border-primary-brown focus:outline-none transition-colors resize-none placeholder-gray-600"
+                className="w-full bg-[#111111] text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 sm:py-3 border border-white/10 focus:border-primary-brown focus:outline-none transition-colors resize-none placeholder-gray-600 text-sm"
                 rows={3}
               />
             </div>
 
             {/* Total Price Preview */}
-            <div className="border-t border-white/10 pt-4">
+            <div className="border-t border-white/10 pt-3 sm:pt-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-400 text-sm">Total Price:</span>
-                <span className="text-secondary-gold text-2xl font-bold">
+                <span className="text-gray-400 text-xs sm:text-sm">Total Price:</span>
+                <span className="text-secondary-gold text-xl sm:text-2xl font-bold">
                   {(calculateTotalPrice() / 1000).toFixed(0)}K
                 </span>
               </div>
@@ -283,16 +281,16 @@ export default function CustomizationModal({
           </div>
 
           {/* Footer Actions */}
-          <div className="sticky bottom-0 bg-[#1A1A1A] border-t border-white/10 px-6 py-4 flex gap-3">
+          <div className="sticky bottom-0 bg-[#1A1A1A] border-t border-white/10 px-4 sm:px-6 py-3 sm:py-4 flex gap-2 sm:gap-3">
             <button
               onClick={onClose}
-              className="flex-1 bg-[#333333] text-white py-3 rounded-2xl font-bold hover:bg-opacity-80 transition-all uppercase tracking-wider"
+              className="flex-1 bg-[#333333] text-white py-2.5 sm:py-3 rounded-lg sm:rounded-2xl font-bold text-sm sm:text-base hover:bg-opacity-80 transition-all uppercase tracking-wider"
             >
               Cancel
             </button>
             <button
               onClick={handleConfirm}
-              className="flex-1 bg-primary-brown text-white py-3 rounded-2xl font-bold hover:bg-opacity-80 transition-all uppercase tracking-wider"
+              className="flex-1 bg-primary-brown text-white py-2.5 sm:py-3 rounded-lg sm:rounded-2xl font-bold text-sm sm:text-base hover:bg-opacity-80 transition-all uppercase tracking-wider"
             >
               Add to Order
             </button>

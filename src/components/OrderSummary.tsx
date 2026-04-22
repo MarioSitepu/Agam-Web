@@ -79,28 +79,28 @@ export default function OrderSummary({
       {/* Mobile Collapse Button (visible only on mobile) */}
       <button
         onClick={handleToggleCollapse}
-        className="lg:hidden w-full bg-gradient-to-r from-primary-brown to-primary-brown/80 text-white py-3 rounded-t-2xl font-bold uppercase tracking-wider text-sm flex items-center justify-between px-4 sticky top-0 z-20"
+        className="lg:hidden w-full bg-gradient-to-r from-primary-brown to-primary-brown/80 text-white py-2.5 sm:py-3 rounded-t-2xl font-bold uppercase tracking-wider text-xs sm:text-sm flex items-center justify-between px-3 sm:px-4 sticky top-0 z-20"
       >
         <div className="flex items-center gap-2">
-          <ShoppingCart size={18} />
+          <ShoppingCart className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           <span>Order Summary ({totalItems})</span>
         </div>
-        {localCollapsed ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        {localCollapsed ? <ChevronUp className="w-5 h-5 sm:w-5 sm:h-5" /> : <ChevronDown className="w-5 h-5 sm:w-5 sm:h-5" />}
       </button>
 
       {/* Summary Panel - Main Container */}
       <div
-        className={`bg-bg-dark rounded-none lg:rounded-3xl p-5 md:p-6 border border-white/10 transition-all duration-300 ${
+        className={`bg-bg-dark rounded-none lg:rounded-3xl p-4 sm:p-5 md:p-6 border border-white/10 transition-all duration-300 ${
           localCollapsed ? "lg:max-h-none max-h-0 lg:max-h-full overflow-hidden" : "max-h-full"
         } lg:max-h-none lg:overflow-visible`}
       >
         {/* Header */}
-        <div className="hidden lg:flex items-center justify-between mb-6">
-          <h2 className="text-white text-lg md:text-xl font-bold uppercase tracking-wider">
+        <div className="hidden lg:flex items-center justify-between mb-4 sm:mb-6">
+          <h2 className="text-white text-base sm:text-lg md:text-xl font-bold uppercase tracking-wider">
             Order Summary
           </h2>
           {hasItems && (
-            <span className="bg-primary-brown/20 text-primary-brown px-3 py-1 rounded-full text-xs font-bold">
+            <span className="bg-primary-brown/20 text-primary-brown px-2 sm:px-3 py-1 rounded-full text-xs font-bold">
               {totalItems} item{totalItems !== 1 ? "s" : ""}
             </span>
           )}
@@ -108,9 +108,9 @@ export default function OrderSummary({
 
         {/* Items List Container */}
         <div
-          className={`space-y-3 mb-6 ${
+          className={`space-y-2 sm:space-y-3 mb-4 sm:mb-6 ${
             hasItems
-              ? "max-h-64 lg:max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
+              ? "max-h-60 sm:max-h-64 lg:max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
               : ""
           }`}
         >
@@ -128,9 +128,9 @@ export default function OrderSummary({
               />
             ))
           ) : (
-            <div className="text-center py-12 lg:py-8">
-              <ShoppingCart size={32} className="text-gray-500 mx-auto mb-3 opacity-50" />
-              <p className="text-gray-500 text-sm font-medium">
+            <div className="text-center py-8 sm:py-12 lg:py-8">
+              <ShoppingCart className="w-8 h-8 sm:w-8 sm:h-8 text-gray-500 mx-auto mb-2 sm:mb-3 opacity-50" />
+              <p className="text-gray-500 text-xs sm:text-sm font-medium">
                 👆 Select items to start ordering
               </p>
             </div>
@@ -138,30 +138,30 @@ export default function OrderSummary({
         </div>
 
         {/* Divider */}
-        {hasItems && <div className="border-t border-white/10 mb-6" />}
+        {hasItems && <div className="border-t border-white/10 mb-4 sm:mb-6" />}
 
         {/* Pricing Section */}
         {hasItems && (
-          <div className="space-y-3 mb-6 bg-[#1A1A1A] rounded-2xl p-4">
+          <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 bg-[#1A1A1A] rounded-lg sm:rounded-2xl p-3 sm:p-4">
             <div className="flex justify-between items-center">
-              <span className="text-gray-400 text-xs md:text-sm uppercase font-semibold tracking-wider">
+              <span className="text-gray-400 text-[10px] sm:text-xs md:text-sm uppercase font-semibold tracking-wider">
                 Subtotal:
               </span>
-              <span className="text-white font-bold text-sm md:text-base">
+              <span className="text-white font-bold text-xs sm:text-sm md:text-base">
                 {formatPrice(totalPrice)}
               </span>
             </div>
 
-            <div className="border-t border-white/10 pt-3 flex justify-between items-center">
-              <span className="text-white text-sm md:text-base font-bold uppercase tracking-wider">
+            <div className="border-t border-white/10 pt-2 sm:pt-3 flex justify-between items-center">
+              <span className="text-white text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider">
                 Total:
               </span>
-              <span className="text-secondary-gold text-2xl md:text-3xl font-bold">
+              <span className="text-secondary-gold text-xl sm:text-2xl md:text-3xl font-bold">
                 {formatPrice(totalPrice)}
               </span>
             </div>
 
-            <p className="text-gray-500 text-[10px] md:text-[11px] text-center mt-2">
+            <p className="text-gray-500 text-[9px] sm:text-[10px] md:text-[11px] text-center mt-1 sm:mt-2">
               VAT included (if applicable)
             </p>
           </div>
@@ -169,11 +169,11 @@ export default function OrderSummary({
 
         {/* Action Buttons */}
         {hasItems && (
-          <div className="mt-6 space-y-2 flex flex-col gap-3">
+          <div className="mt-4 sm:mt-6 space-y-2 flex flex-col gap-2 sm:gap-3">
             <button
               onClick={onCheckout}
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-primary-brown to-primary-brown/80 hover:from-primary-brown/90 hover:to-primary-brown/70 text-white py-3 md:py-4 rounded-2xl font-bold uppercase tracking-wider text-sm md:text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 shadow-lg hover:shadow-xl"
+              className="w-full bg-gradient-to-r from-primary-brown to-primary-brown/80 hover:from-primary-brown/90 hover:to-primary-brown/70 text-white py-2.5 sm:py-3 md:py-4 rounded-xl sm:rounded-2xl font-bold uppercase tracking-wider text-xs sm:text-sm md:text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 shadow-lg hover:shadow-xl"
             >
               {isLoading ? "Processing..." : "Checkout"}
             </button>
@@ -181,9 +181,9 @@ export default function OrderSummary({
             <button
               onClick={onModify}
               disabled={isLoading}
-              className="w-full bg-[#333333] hover:bg-[#444444] text-white py-2 md:py-3 rounded-2xl font-bold uppercase tracking-wider text-xs md:text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2"
+              className="w-full bg-[#333333] hover:bg-[#444444] text-white py-2 sm:py-2.5 md:py-3 rounded-xl sm:rounded-2xl font-bold uppercase tracking-wider text-[11px] sm:text-xs md:text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2"
             >
-              <Settings size={16} className="md:w-5 md:h-5" />
+              <Settings className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               <span>Modify Order</span>
             </button>
           </div>
