@@ -7,7 +7,6 @@ export default function Footer() {
     <footer className="pt-16 sm:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-bg-dark text-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 text-center sm:text-left">
         <div className="flex flex-col items-center sm:items-start">
-        <div className="flex flex-col items-center sm:items-start">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 rounded-full bg-[#FFB800] flex items-center justify-center">
               <span className="text-black font-bold text-lg leading-none mt-1">W</span>
