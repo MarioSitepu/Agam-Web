@@ -195,10 +195,9 @@ export default function OrderPageWithTable() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Main Content - Only show after name validation */}
-      {nameValidated && (
-        <main className="pt-20 md:pt-24 pb-4 md:pb-8 px-4 md:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
+      {/* Main Content - Always rendered but blurred when modal is open */}
+      <main className={`pt-20 md:pt-24 pb-4 md:pb-8 px-4 md:px-6 lg:px-8 transition-all duration-500 ${!nameValidated ? "blur-md pointer-events-none" : ""}`}>
+        <div className="max-w-7xl mx-auto">
           {/* Table Selection Banner + Back Button */}
           <div className="mb-6 md:mb-8 lg:mb-10 bg-gradient-to-r from-primary-brown/10 to-transparent rounded-2xl p-4 md:p-6 border border-primary-brown/20">
             <div className="flex items-center justify-between gap-4">
@@ -299,7 +298,6 @@ export default function OrderPageWithTable() {
           </div>
         </div>
       </main>
-      )}
 
       {/* Customization Modal */}
       <CustomizationModal
@@ -331,7 +329,7 @@ export default function OrderPageWithTable() {
 
       {/* Customer Name Registration Modal */}
       {showNameModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-[100] p-4 transition-all duration-300">
           <div className="bg-white rounded-2xl max-w-sm w-full p-6 md:p-8 shadow-2xl">
             {/* Header */}
             <div className="text-center mb-6">
@@ -382,8 +380,7 @@ export default function OrderPageWithTable() {
             <div className="flex gap-3">
               <button
                 onClick={() => {
-                  setShowNameModal(false);
-                  setNameError("");
+                  router.push("/order");
                 }}
                 className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm"
               >
