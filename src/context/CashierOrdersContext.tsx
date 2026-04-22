@@ -194,13 +194,8 @@ export function CashierOrdersProvider({ children }: { children: ReactNode }) {
   };
 
   const registerTableName = (tableId: string, customerName: string) => {
-    if (tableCustomerNames[tableId] && tableCustomerNames[tableId] !== customerName) {
-      return {
-        success: false,
-        message: `Meja ini sudah atas nama "${tableCustomerNames[tableId]}". Nama Anda tidak sesuai.`,
-      };
-    }
-
+    // Allow any name to be registered to a table at any time.
+    // This facilitates friends joining a table or correcting typos easily.
     setTableCustomerNames((prev) => ({
       ...prev,
       [tableId]: customerName,
