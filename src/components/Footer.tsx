@@ -7,10 +7,17 @@ export default function Footer() {
     <footer className="pt-20 pb-10 px-6 md:px-8 border-t border-white/10 bg-bg-dark text-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center sm:text-left">
         <div className="flex flex-col items-center sm:items-start">
-          <h2 className="text-3xl font-script text-white mb-6">Bakery</h2>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-8 h-8 rounded-full bg-[#FFB800] flex items-center justify-center">
+              <span className="text-black font-bold text-lg leading-none mt-1">W</span>
+            </div>
+            <span className="text-2xl font-bold text-white uppercase tracking-wider">
+              WARKOP <span className="text-[#FFB800] italic font-script ml-1 normal-case tracking-normal text-3xl">Agam</span>
+            </span>
+          </div>
           <p className="text-white/60 mb-8 leading-relaxed max-w-sm sm:max-w-none">
-            Crafting moments of joy with every bite. Our bakery brings you the 
-            finest artisanal breads and pastries, made with love and premium ingredients.
+            The Authentic Medan Concept. Menghadirkan cita rasa otentik Mie Aceh, 
+            Kopi Sanger, dan kuliner khas Medan dengan bumbu rempah pilihan.
           </p>
           <div className="flex gap-4">
             <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">
@@ -36,16 +43,16 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-white font-medium mb-6 uppercase tracking-wider text-sm">Products</h4>
+          <h4 className="text-white font-medium mb-6 uppercase tracking-wider text-sm">Our Specialties</h4>
           <ul className="space-y-4">
-            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">Artisanal Bread</a></li>
-            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">Custom Cakes</a></li>
-            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">French Pastries</a></li>
-            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">Seasonal Specials</a></li>
+            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">Mie Aceh Spesial</a></li>
+            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">Nasi Gurih Medan</a></li>
+            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">Kopi Sanger</a></li>
+            <li><a href="#" className="text-white/60 hover:text-secondary-gold transition-colors">Teh Tarek</a></li>
           </ul>
         </div>
 
-        <div className="flex flex-col items-center sm:items-start">
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
           <h4 className="text-white font-medium mb-6 uppercase tracking-wider text-sm">Newsletter</h4>
           <p className="text-white/60 mb-6 text-sm">Subscribe to get special offers and seasonal news.</p>
           <div className="flex w-full gap-2 max-w-sm sm:max-w-none">
@@ -65,8 +72,8 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
-        <p className="text-white/40 text-xs text-center md:text-left">
-          © 2024 Bakery Delight. All rights reserved. Made with love for artisanal baking.
+        <p className="text-white/40 text-[10px] sm:text-xs text-center md:text-left">
+          © 2024 Warkop Agam. All rights reserved. Authentic Taste of Medan.
         </p>
         <div className="flex gap-6 md:gap-8">
           <a href="#" className="text-white/40 text-xs hover:text-white transition-colors">Privacy Policy</a>
@@ -75,8 +82,8 @@ export default function Footer() {
       </div>
 
       {/* Decorative text watermark */}
-      <span className="absolute -bottom-20 -left-10 text-[300px] leading-none text-white/5 font-black uppercase pointer-events-none select-none z-[-1]">
-        Bake
+      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[100px] xs:text-[150px] md:text-[300px] leading-none text-white/[0.02] font-black uppercase pointer-events-none select-none z-[-1]">
+        Agam
       </span>
     </footer>
   );

@@ -30,16 +30,16 @@ export default function Navbar() {
   const activeCategoryData = menuData.find(cat => cat.id === activeCategory);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#111111] py-5 px-6 lg:px-12 transition-all duration-300">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#111111] py-4 md:py-5 px-4 sm:px-6 lg:px-12 transition-all duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo Section */}
-        <Link href="/" className="flex items-center gap-3 relative z-20">
-          <div className="w-8 h-8 rounded-full bg-[#FFB800] flex items-center justify-center">
-             <span className="text-black font-bold text-lg leading-none mt-1">W</span>
+        <Link href="/" className="flex items-center gap-2 md:gap-3 relative z-20">
+          <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#FFB800] flex items-center justify-center">
+             <span className="text-black font-bold text-base md:text-lg leading-none mt-1">W</span>
           </div>
           <div className="flex items-center">
-            <span className="text-xl md:text-2xl font-bold text-white uppercase tracking-wider font-sans">
-              WARKOP <span className="text-[#FFB800] italic font-script ml-1 normal-case tracking-normal text-2xl md:text-3xl">Agam</span>
+            <span className="text-lg md:text-2xl font-bold text-white uppercase tracking-wider font-sans">
+              WARKOP <span className="text-[#FFB800] italic font-script ml-0.5 md:ml-1 normal-case tracking-normal text-xl md:text-3xl">Agam</span>
             </span>
           </div>
         </Link>
@@ -104,6 +104,7 @@ export default function Navbar() {
                             src={item.image || "/placeholder-food.png"} 
                             alt={item.name}
                             fill
+                            sizes="(max-width: 768px) 100vw, 25vw"
                             className="object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                           <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
@@ -130,36 +131,37 @@ export default function Navbar() {
         </div>
 
         {/* Right Section (Actions) */}
-        <div className="hidden lg:flex items-center gap-6 relative z-20">
-          <button className="text-white hover:text-[#FFB800] transition-colors">
+        <div className="flex items-center gap-3 md:gap-6 relative z-20">
+          <button className="hidden sm:block text-white hover:text-[#FFB800] transition-colors">
             <Search size={20} />
           </button>
           
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="relative text-white hover:text-[#FFB800] transition-colors"
+            className="relative text-white hover:text-[#FFB800] transition-colors p-2"
           >
-            <ShoppingBag size={20} />
+            {/* Optimized ShoppingBag icon */}
+            <ShoppingBag className="w-5 h-5 md:w-6 md:h-6" />
             {totalCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#FFB800] text-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+              <span className="absolute top-0 right-0 md:-top-2 md:-right-2 bg-[#FFB800] text-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                 {totalCount}
               </span>
             )}
           </button>
 
-          <button className="flex items-center gap-2 border border-[#FFB800] px-6 py-2 rounded-full text-white hover:bg-[#FFB800] hover:text-black transition-all group">
+          <button className="hidden lg:flex items-center gap-2 border border-[#FFB800] px-6 py-2 rounded-full text-white hover:bg-[#FFB800] hover:text-black transition-all group">
             <span className="text-sm font-medium">Login</span>
             <LogIn size={16} className="text-[#FFB800] group-hover:text-black" />
           </button>
-        </div>
 
-        {/* Mobile Toggle */}
-        <button 
-          className="lg:hidden text-white p-2 relative z-20"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+          {/* Mobile Toggle */}
+          <button 
+            className="lg:hidden text-white p-2"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Drawer */}
@@ -183,7 +185,7 @@ export default function Navbar() {
                     onClick={() => setIsOpen(false)}
                   >
                     <div className="relative aspect-square rounded-lg overflow-hidden bg-[#333333]">
-                       <Image src={cat.items[0]?.image || "/placeholder-food.png"} alt={cat.name} fill className="object-cover" />
+                       <Image src={cat.items[0]?.image || "/placeholder-food.png"} alt={cat.name} fill sizes="100px" className="object-cover" />
                     </div>
                     <span className="text-white text-xs font-bold uppercase">{cat.name}</span>
                   </Link>

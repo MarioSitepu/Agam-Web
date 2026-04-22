@@ -12,11 +12,11 @@ export default function ExploreSection() {
   const { addItem } = useCart();
 
   return (
-    <section id="menu" className="bg-white py-16 md:py-24 px-6 md:px-8">
+    <section id="menu" className="bg-white py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-10 md:mb-16">
-          <h4 className="text-primary-brown uppercase tracking-[0.3em] font-bold text-sm mb-4">Our Recommendation</h4>
-          <h2 className="text-black font-script text-6xl md:text-8xl text-center">Makan & Minum</h2>
+        <div className="text-center mb-10 md:mb-16 px-4">
+          <h4 className="text-primary-brown uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold text-xs md:text-sm mb-3 md:mb-4">Our Recommendation</h4>
+          <h2 className="text-black font-script text-5xl sm:text-6xl md:text-8xl text-center">Makan & Minum</h2>
         </div>
         
         {/* Category Tabs */}
@@ -42,7 +42,7 @@ export default function ExploreSection() {
           {activeCategory?.items.map((item, index) => (
             <div 
               key={index} 
-              className="bg-gray-50 rounded-[2.5rem] p-6 flex flex-col group relative transition-all hover:bg-white hover:shadow-2xl hover:shadow-primary-brown/10 border border-transparent hover:border-primary-brown/5"
+              className="bg-gray-50 rounded-[2rem] md:rounded-[2.5rem] p-4 md:p-6 flex flex-col group relative transition-all hover:bg-white hover:shadow-2xl hover:shadow-primary-brown/10 border border-transparent hover:border-primary-brown/5"
             >
               {/* Product Image */}
               <div className="relative w-full aspect-square mb-6 overflow-hidden rounded-[2rem] shadow-lg">
@@ -50,6 +50,7 @@ export default function ExploreSection() {
                   src={item.image || "/placeholder-food.png"}
                   alt={item.name}
                   fill
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 
@@ -67,12 +68,12 @@ export default function ExploreSection() {
               {/* Product Info */}
               <div className="w-full flex-grow flex flex-col">
                 <div className="flex justify-between items-start mb-2">
-                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary-brown transition-colors uppercase leading-[1.2] max-w-[80%]">
+                   <h3 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-brown transition-colors uppercase leading-[1.2] max-w-[80%]">
                     {item.name}
                   </h3>
                   <div className="flex items-center gap-0.5 text-[#FFB800]">
-                    <Star size={14} className="fill-[#FFB800]" />
-                    <span className="text-xs font-bold text-gray-600">4.8</span>
+                    <Star className="w-3 h-3 md:w-3.5 md:h-3.5 fill-[#FFB800]" />
+                    <span className="text-[10px] md:text-xs font-bold text-gray-600">4.8</span>
                   </div>
                 </div>
                 

@@ -10,7 +10,7 @@ export default function Hero() {
         
         {/* Left Content */}
         <div className="relative z-10 flex flex-col items-start text-left order-2 lg:order-1 pt-10 lg:pt-0">
-          <h1 className="text-white font-sans text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.1] tracking-tight mb-6">
+          <h1 className="text-white font-sans text-3xl xs:text-4xl sm:text-6xl md:text-7xl font-extrabold leading-[1.2] sm:leading-[1.1] tracking-tight mb-4 sm:mb-6">
             Cita Rasa Asli <br />
             <span className="text-[#FFB800]">Warkop Agam!</span>
           </h1>
@@ -19,7 +19,7 @@ export default function Hero() {
             The Authentic Medan Concept. Nikmati sajian mie aceh, kopi sanger, dan hidangan khas Medan lainnya dengan balutan bumbu rempah pilihan yang menggugah selera.
           </p>
           
-          <a href="#menu" className="bg-[#FFB800] text-black px-10 py-4 rounded-full text-lg font-bold hover:bg-yellow-400 transition-all transform hover:scale-105 shadow-[0_4px_20px_rgba(255,184,0,0.3)]">
+          <a href="#menu" className="w-full sm:w-auto text-center bg-[#FFB800] text-black px-10 py-4 rounded-full text-lg font-bold hover:bg-yellow-400 transition-all transform hover:scale-105 shadow-[0_4px_20px_rgba(255,184,0,0.3)] active:scale-95">
             Our Menu
           </a>
 
@@ -48,15 +48,16 @@ export default function Hero() {
         </div>
 
         {/* Right Image/Visuals */}
-        <div className="relative z-10 w-full h-[400px] sm:h-[500px] lg:h-[600px] flex justify-center items-center order-1 lg:order-2">
+        <div className="relative z-10 w-full h-[320px] xs:h-[380px] sm:h-[500px] lg:h-[600px] flex justify-center items-center order-1 lg:order-2 scale-90 xs:scale-100 lg:scale-110">
           
           {/* Main Circular Image */}
-          <div className="relative w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[480px] lg:h-[480px] rounded-full p-2 border-2 border-dashed border-[#FFB800]/50 animate-[spin_60s_linear_infinite] hover:animate-none">
+          <div className="relative w-[260px] h-[260px] xs:w-[300px] xs:h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[480px] lg:h-[480px] rounded-full p-2 border-2 border-dashed border-[#FFB800]/50 animate-[spin_60s_linear_infinite] hover:animate-none">
              <div className="w-full h-full rounded-full overflow-hidden relative shadow-2xl">
                 <Image
                   src="/hero-warkop.png" 
                   alt="Warkop Agam Dish"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover hover:scale-105 transition-transform duration-700"
                   priority
                 />
@@ -64,33 +65,33 @@ export default function Hero() {
           </div>
 
           {/* Floating Badge 1 (Courier/Delivery) */}
-          <div className="absolute top-[5%] md:top-[10%] left-0 sm:left-[5%] lg:-left-5 bg-[#1A1A1A] rounded-2xl p-3 flex items-center gap-3 shadow-2xl border border-white/5 animate-bounce" style={{animationDuration: '3s'}}>
-            <div className="w-10 h-10 rounded-full bg-[#333333] overflow-hidden flex items-center justify-center border border-white/10">
-              <span className="text-[#FFB800] font-bold text-xs uppercase">Agam</span>
+          <div className="absolute top-[5%] md:top-[10%] left-[-5%] sm:left-[5%] lg:-left-5 bg-[#1A1A1A] rounded-2xl p-2 md:p-3 flex items-center gap-2 md:gap-3 shadow-2xl border border-white/5 animate-bounce scale-90 md:scale-100" style={{animationDuration: '3s'}}>
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#333333] overflow-hidden flex items-center justify-center border border-white/10">
+              <span className="text-[#FFB800] font-bold text-[10px] md:text-xs uppercase">Agam</span>
             </div>
             <div>
-              <p className="text-white text-xs font-bold leading-tight">Fast Delivery</p>
-              <p className="text-gray-400 text-[10px]">Warkop Courier</p>
+              <p className="text-white text-[10px] md:text-xs font-bold leading-tight">Fast Delivery</p>
+              <p className="text-gray-400 text-[8px] md:text-[10px]">Warkop Courier</p>
             </div>
-            <div className="w-8 h-8 rounded-full bg-[rgba(255,184,0,0.1)] flex items-center justify-center ml-2 border border-[#FFB800]/20">
-              <Phone className="w-4 h-4 text-[#FFB800]" />
+            <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[rgba(255,184,0,0.1)] flex items-center justify-center ml-1 md:ml-2 border border-[#FFB800]/20">
+              <Phone className="w-3 h-3 md:w-4 md:h-4 text-[#FFB800]" />
             </div>
           </div>
 
-          {/* Floating Badge 2 (Price/Rating) */}
-          <div className="absolute bottom-[5%] md:bottom-[10%] right-0 sm:right-[0%] lg:-right-5 bg-white rounded-2xl p-4 shadow-2xl flex items-center gap-4 animate-bounce" style={{animationDelay: '1.5s', animationDuration: '3.5s'}}>
-             <div className="w-14 h-14 rounded-full overflow-hidden relative bg-gray-200 border-2 border-white shadow-inner">
-                <Image src="/hero-warkop.png" alt="Mie Aceh" fill className="object-cover" />
+          {/* Floating Badge 2 (Price/Rating) - Hidden on very small screens to avoid overlap */}
+          <div className="hidden xs:flex absolute bottom-[5%] md:bottom-[10%] right-[-5%] sm:right-[0%] lg:-right-5 bg-white rounded-2xl p-3 md:p-4 shadow-2xl items-center gap-3 md:gap-4 animate-bounce scale-75 md:scale-100" style={{animationDelay: '1.5s', animationDuration: '3.5s'}}>
+             <div className="w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden relative bg-gray-200 border-2 border-white shadow-inner">
+                <Image src="/hero-warkop.png" alt="Mie Aceh" fill sizes="56px" className="object-cover" />
              </div>
              <div>
-                <p className="text-black font-bold text-sm">Mie Aceh Spesial</p>
-                <div className="flex items-center gap-1 my-1">
+                <p className="text-black font-bold text-xs md:text-sm">Mie Aceh Spesial</p>
+                <div className="flex items-center gap-0.5 md:gap-1 my-0.5 md:my-1">
                   {[...Array(4)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 text-[#FFB800] fill-[#FFB800]" />
+                    <Star key={i} className="w-2 h-2 md:w-3 md:h-3 text-[#FFB800] fill-[#FFB800]" />
                   ))}
-                  <Star className="w-3 h-3 text-gray-300 fill-gray-300" />
+                  <Star className="w-2 h-2 md:w-3 md:h-3 text-gray-300 fill-gray-300" />
                 </div>
-                <p className="text-black font-bold text-lg leading-none">Rp 25.000</p>
+                <p className="text-black font-bold text-sm md:text-lg leading-none">Rp 25.000</p>
              </div>
           </div>
 

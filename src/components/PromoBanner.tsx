@@ -17,8 +17,8 @@ export default function PromoBanner() {
         </button>
       </div>
 
-      {/* Decorative text watermark */}
-      <span className="absolute -bottom-10 right-0 text-[200px] leading-none text-black/5 font-black uppercase pointer-events-none select-none">
+      {/* Decorative text watermark - centered for better responsive balance */}
+      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[100px] xs:text-[140px] md:text-[200px] leading-none text-black/[0.03] font-black uppercase pointer-events-none select-none z-0">
         Sale
       </span>
     </div>
