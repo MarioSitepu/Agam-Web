@@ -14,26 +14,10 @@ import { menuData, MenuItem } from "@/data/menuData";
 import { useOrder } from "@/context/OrderContext";
 import { useCashierOrders } from "@/context/CashierOrdersContext";
 import { AVAILABLE_TABLES } from "@/components/TableSelector";
-import { ArrowLeft, QrCode, X, AlertCircle } from "lucide-react";
+import { ArrowLeft, QrCode, X, AlertCircle, Search } from "lucide-react";
 
 /**
  * Order Page - Full-featured digital menu ordering interface for specific table
- *
- * Dynamic Route: /order/[tableId]
- *
- * Features:
- * - Display current table ID at the top
- * - Back button to change table
- * - Category filter tabs with smooth scrolling on mobile
- * - Responsive menu grid (1-2 cols mobile, 2-3 cols tablet, 3-4 cols desktop)
- * - Modular OrderSummary component with collapse/expand on mobile
- * - Real-time order state via useOrder hook
- * - Consistent styling with design system
- *
- * Layout Structure:
- * - Desktop (lg): 3-column grid with menu items left (3-4 cols) and Order Summary right (1 col, sticky)
- * - Tablet (md): 2-column grid with responsive spacing
- * - Mobile (mobile): Single column with collapsible Order Summary panel at bottom
  */
 
 export default function OrderPageWithTable() {
@@ -61,6 +45,7 @@ export default function OrderPageWithTable() {
   const [customerName, setCustomerName] = useState("");
   const [nameError, setNameError] = useState("");
   const [nameValidated, setNameValidated] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Get categories from menu data
   const allMenuItems = menuData
@@ -80,9 +65,24 @@ export default function OrderPageWithTable() {
   ];
 
   const categories = categoriesWithAll;
-  const displayCategory = activeCategory
-    ? categories.find((c) => c.id === activeCategory)
-    : categories[0];
+  
+  // Filter items based on search or category
+  const getFilteredItems = () => {
+    if (searchQuery.trim()) {
+      return allMenuItems.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    const displayCategory = activeCategory
+      ? categories.find((c) => c.id === activeCategory)
+      : categories[0];
+      
+    return displayCategory?.items || [];
+  };
+
+  const filteredItems = getFilteredItems();
 
   /**
    * Show name validation modal on page load
@@ -265,22 +265,52 @@ export default function OrderPageWithTable() {
                 </div>
               </div>
 
+              {/* Search Bar */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                  <Search size={18} className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Cari menu favoritmu..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 bg-[#F0F0F0] border-none rounded-xl focus:ring-2 focus:ring-primary-brown/20 text-sm md:text-base outline-none transition-all"
+                />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery("")}
+                    className="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+
               {/* Menu Items Responsive Grid */}
-              {displayCategory && displayCategory.items.length > 0 ? (
+              {filteredItems.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-                  {displayCategory.items.map((item, idx) => (
+                  {filteredItems.map((item, idx) => (
                     <MenuItemCard
-                      key={`${displayCategory.id}_${idx}`}
+                      key={`${item.name}_${idx}`}
                       item={item}
                       onOrderClick={handleOrderClick}
                     />
                   ))}
                 </div>
               ) : (
-                <div className="col-span-full text-center py-16 md:py-20">
-                  <p className="text-gray-500 text-base md:text-lg">
-                    No items in this category
+                <div className="col-span-full text-center py-16 md:py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+                  <p className="text-gray-500 text-base md:text-lg mb-2">
+                    {searchQuery ? `Tidak ada hasil untuk "${searchQuery}"` : "Tidak ada menu di kategori ini"}
                   </p>
+                  {searchQuery && (
+                    <button 
+                      onClick={() => setSearchQuery("")}
+                      className="text-primary-brown font-bold hover:underline"
+                    >
+                      Hapus pencarian
+                    </button>
+                  )}
                 </div>
               )}
             </div>
