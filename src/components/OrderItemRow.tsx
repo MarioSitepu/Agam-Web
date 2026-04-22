@@ -80,12 +80,12 @@ export default function OrderItemRow({
           <div className="space-y-1">
             {customizations.map((custom) => (
               <p key={custom.id} className="text-gray-400 text-[11px] md:text-xs leading-relaxed">
-                • {custom.value}
-                {custom.price && custom.price > 0 && (
+                • {custom.label === "spice-level" ? `Spicy Level: ${custom.value}` : custom.value}
+                {typeof custom.price === "number" && custom.price > 0 ? (
                   <span className="text-secondary-gold ml-1 font-semibold">
                     +{(custom.price / 1000).toFixed(0)}K
                   </span>
-                )}
+                ) : null}
               </p>
             ))}
           </div>

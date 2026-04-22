@@ -128,7 +128,12 @@ export default function OrderPageWithTable() {
             name: item.menuItemName,
             price: item.menuItemPrice,
             quantity: item.quantity,
-            customizations: item.customizations.map((c) => `${c.label}: ${c.value}`),
+            customizations: item.customizations.map((c) => {
+              const label = c.label === "spice-level" ? "Spicy Level" : 
+                           c.label === "add-extras" ? "Extra" :
+                           c.label === "no-items" ? "No" : c.label;
+              return `${label}: ${c.value}`;
+            }),
           })),
           totalPrice,
           status: "pending",

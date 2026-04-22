@@ -157,12 +157,12 @@ export default function OrderReviewModal({
                                 key={custom.id}
                                 className="flex justify-between text-gray-400 text-xs"
                               >
-                                <span>• {custom.value}</span>
-                                {custom.price && custom.price > 0 && (
+                                <span>• {custom.label === "spice-level" ? `Spicy Level: ${custom.value}` : custom.value}</span>
+                                {typeof custom.price === "number" && custom.price > 0 ? (
                                   <span className="text-secondary-gold">
                                     +{formatPrice(custom.price * item.quantity)}
                                   </span>
-                                )}
+                                ) : null}
                               </div>
                             ))}
                           </div>
