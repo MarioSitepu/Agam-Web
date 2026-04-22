@@ -218,16 +218,16 @@ export default function CashierDashboard() {
           </Link>
 
           {/* Header */}
-          <div className="mb-8 sm:mb-10">
-            <h1 className="text-black font-script text-5xl sm:text-6xl md:text-7xl mb-2">Cashier</h1>
-            <p className="text-gray-600 text-sm sm:text-base">Manage orders from all tables</p>
+          <div className="mb-6 sm:mb-10">
+            <h1 className="text-black font-script text-4xl sm:text-7xl mb-1 sm:mb-2">Cashier</h1>
+            <p className="text-gray-600 text-xs sm:text-base">Manage orders from all tables</p>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-4 mb-8 sm:mb-10 border-b border-gray-200">
+          <div className="flex gap-4 mb-6 sm:mb-10 border-b border-gray-200">
             <button
               onClick={() => setActiveTab("orders")}
-              className={`pb-4 font-bold text-lg transition-colors ${
+              className={`pb-3 sm:pb-4 font-bold text-sm sm:text-lg transition-colors ${
                 activeTab === "orders"
                   ? "text-primary-brown border-b-2 border-primary-brown"
                   : "text-gray-500 hover:text-black"
@@ -237,13 +237,13 @@ export default function CashierDashboard() {
             </button>
             <button
               onClick={() => setActiveTab("history")}
-              className={`pb-4 font-bold text-lg transition-colors ${
+              className={`pb-3 sm:pb-4 font-bold text-sm sm:text-lg transition-colors ${
                 activeTab === "history"
                   ? "text-primary-brown border-b-2 border-primary-brown"
                   : "text-gray-500 hover:text-black"
               }`}
             >
-              Order History ({paidOrders.length})
+              History ({paidOrders.length})
             </button>
           </div>
 
@@ -266,23 +266,31 @@ export default function CashierDashboard() {
 
           {/* Statistics Cards - Only show on Orders tab */}
           {activeTab === "orders" && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <p className="text-gray-600 text-sm font-semibold mb-2">Active Tables</p>
-                <p className="text-3xl sm:text-4xl font-bold text-black">{stats.totalOrders}</p>
-                <p className="text-gray-500 text-sm mt-3">{AVAILABLE_TABLES.length - stats.totalOrders} tables available</p>
+            <div className="grid grid-cols-3 gap-2 sm:gap-6 mb-6 sm:mb-10">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-gray-200 shadow-sm flex flex-col justify-between">
+                <div>
+                  <p className="text-gray-500 text-[10px] sm:text-sm font-semibold mb-1 uppercase tracking-wider">Active Tables</p>
+                  <p className="text-xl sm:text-4xl font-bold text-black">{stats.totalOrders}</p>
+                </div>
+                <p className="text-gray-400 text-[9px] sm:text-sm mt-2">{AVAILABLE_TABLES.length - stats.totalOrders} left</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <p className="text-gray-600 text-sm font-semibold mb-2">Pending Orders</p>
-                <p className="text-3xl sm:text-4xl font-bold text-red-600">{stats.pendingOrders}</p>
-                <p className="text-gray-500 text-sm mt-3">Awaiting preparation</p>
+              <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-gray-200 shadow-sm flex flex-col justify-between">
+                <div>
+                  <p className="text-gray-500 text-[10px] sm:text-sm font-semibold mb-1 uppercase tracking-wider">Pending</p>
+                  <p className="text-xl sm:text-4xl font-bold text-red-600">{stats.pendingOrders}</p>
+                </div>
+                <p className="text-gray-400 text-[9px] sm:text-sm mt-2">Awaiting</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <p className="text-gray-600 text-sm font-semibold mb-2">Upcoming Revenue</p>
-                <p className="text-2xl sm:text-3xl font-bold text-green-600">{formatCurrency(stats.totalRevenue)}</p>
-                <p className="text-gray-500 text-sm mt-3">From pending orders</p>
+              <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-gray-200 shadow-sm flex flex-col justify-between">
+                <div>
+                  <p className="text-gray-500 text-[10px] sm:text-sm font-semibold mb-1 uppercase tracking-wider">Revenue</p>
+                  <p className="text-lg sm:text-3xl font-bold text-green-600">
+                    {stats.totalRevenue >= 1000 ? `${(stats.totalRevenue / 1000).toFixed(0)}K` : stats.totalRevenue}
+                  </p>
+                </div>
+                <p className="text-gray-400 text-[9px] sm:text-sm mt-2">Pending</p>
               </div>
             </div>
           )}
@@ -459,10 +467,10 @@ export default function CashierDashboard() {
                   })}
                 </div>
               ) : (
-                <div className="text-center py-12 sm:py-16 bg-white rounded-2xl border border-gray-200">
-                  <AlertCircle size={48} className="mx-auto text-gray-400 mb-4" />
-                  <p className="text-gray-600 text-lg font-semibold">No orders yet</p>
-                  <p className="text-gray-500 text-sm mt-2">Orders will appear here when tables start ordering</p>
+                <div className="text-center py-10 sm:py-16 bg-white rounded-2xl border border-gray-200">
+                  <AlertCircle size={40} className="mx-auto text-gray-400 mb-3" />
+                  <p className="text-gray-600 text-base sm:text-lg font-semibold">No orders yet</p>
+                  <p className="text-gray-500 text-xs sm:text-sm mt-1">Orders will appear here when tables start ordering</p>
                 </div>
               )}
             </>

@@ -63,7 +63,7 @@ export default function OrderItemRow({
         {/* Remove Button */}
         <button
           onClick={() => onRemove(orderItemId)}
-          className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 p-1 hover:bg-red-500/10 rounded-lg"
+          className="text-gray-400 hover:text-red-500 transition-colors shrink-0 p-1 hover:bg-red-500/10 rounded-lg"
           title="Remove item from order"
           aria-label={`Remove ${menuItemName} from order`}
         >

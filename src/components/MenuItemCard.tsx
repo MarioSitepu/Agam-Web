@@ -47,11 +47,11 @@ export default function MenuItemCard({
       {/* Content Section */}
       <div className="flex-1 w-full flex flex-col">
         {/* Menu Item Name */}
-        <div className="min-h-[1.75rem] xs:min-h-[2rem] sm:min-h-[3rem] md:min-h-[3.5rem] mb-1 sm:mb-2">
-          <h3 className="text-white text-[10px] xs:text-xs sm:text-lg md:text-xl font-bold uppercase tracking-wide sm:tracking-wider line-clamp-2 leading-tight">
-            {item.name}
-          </h3>
-        </div>
+          <div className="min-h-7 xs:min-h-8 sm:min-h-12 md:min-h-14 mb-1 sm:mb-2">
+            <h3 className="text-white text-[10px] xs:text-xs sm:text-lg md:text-xl font-bold uppercase tracking-wide sm:tracking-wider line-clamp-2 leading-tight">
+              {item.name}
+            </h3>
+          </div>
 
         {/* Description (if available) - Hidden on very small screens to save space */}
         {item.description ? (
@@ -59,7 +59,7 @@ export default function MenuItemCard({
             {item.description}
           </p>
         ) : (
-          <div className="flex-grow"></div>
+          <div className="grow"></div>
         )}
 
         {/* Footer: Price and Button - Pushed to bottom with mt-auto */}

@@ -204,12 +204,12 @@ export default function OrderPageWithTable() {
       <main className={`pt-20 md:pt-24 pb-4 md:pb-8 px-4 md:px-6 lg:px-8 transition-all duration-500 ${!nameValidated ? "blur-md pointer-events-none" : ""}`}>
         <div className="max-w-7xl mx-auto">
           {/* Table Selection Banner + Back Button */}
-          <div className="mb-6 md:mb-8 lg:mb-10 bg-gradient-to-r from-primary-brown/10 to-transparent rounded-2xl p-4 md:p-6 border border-primary-brown/20">
+          <div className="mb-6 md:mb-8 lg:mb-10 bg-linear-to-r from-primary-brown/10 to-transparent rounded-2xl p-4 md:p-6 border border-primary-brown/20">
             <div className="flex items-center justify-between gap-4">
               {/* Table Info Section */}
               <div className="flex items-center gap-3 md:gap-4">
                 {/* QR Icon */}
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-primary-brown flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-primary-brown flex items-center justify-center shrink-0">
                   <QrCode size={20} className="md:w-6 md:h-6 text-white" />
                 </div>
 
@@ -251,13 +251,13 @@ export default function OrderPageWithTable() {
             {/* Left Column: Menu Display */}
             <div className="lg:col-span-3 space-y-6">
               {/* Category Filter Tabs */}
-              <div className="overflow-x-auto -mx-4 px-4 md:-mx-0 md:px-0">
+              <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
                 <div className="flex gap-2 md:gap-3 min-w-max md:min-w-full md:flex-wrap pb-2">
                   {categories.map((category) => (
                     <button
                       key={category.id}
                       onClick={() => setActiveCategory(category.id)}
-                      className={`px-3 md:px-5 py-2 md:py-2.5 rounded-full font-bold text-xs md:text-sm whitespace-nowrap transition-all flex-shrink-0 ${
+                      className={`px-3 md:px-5 py-2 md:py-2.5 rounded-full font-bold text-xs md:text-sm whitespace-nowrap transition-all shrink-0 ${
                         activeCategory === category.id ||
                         (activeCategory === null && category.id === categories[0].id)
                           ? "bg-primary-brown text-white shadow-lg"
@@ -364,7 +364,7 @@ export default function OrderPageWithTable() {
 
       {/* Customer Name Registration Modal */}
       {showNameModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-[100] p-4 transition-all duration-300">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-100 p-4 transition-all duration-300">
           <div className="bg-white rounded-2xl max-w-sm w-full p-6 md:p-8 shadow-2xl">
             {/* Header */}
             <div className="text-center mb-6">
@@ -379,7 +379,7 @@ export default function OrderPageWithTable() {
             {/* Error Message */}
             {nameError && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex gap-3">
-                <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle size={20} className="text-red-600 shrink-0 mt-0.5" />
                 <p className="text-red-700 text-sm">{nameError}</p>
               </div>
             )}

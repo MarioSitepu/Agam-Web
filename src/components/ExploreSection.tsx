@@ -45,7 +45,7 @@ export default function ExploreSection() {
               className="bg-gray-50 rounded-xl md:rounded-[2.5rem] p-2 md:p-6 flex flex-col group relative transition-all hover:bg-white hover:shadow-2xl hover:shadow-primary-brown/10 border border-transparent hover:border-primary-brown/5 h-full"
             >
               {/* Product Image */}
-              <div className="relative w-full aspect-square mb-2 sm:mb-6 overflow-hidden rounded-lg sm:rounded-[2rem] shadow-lg">
+              <div className="relative w-full aspect-square mb-2 sm:mb-6 overflow-hidden rounded-lg sm:rounded-4xl shadow-lg">
                 <Image
                   src={item.image || "/placeholder-food.png"}
                   alt={item.name}
@@ -62,16 +62,16 @@ export default function ExploreSection() {
                   </div>
                 )}
                 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               
               {/* Product Info */}
-              <div className="w-full flex-grow flex flex-col">
-                <div className="min-h-[1.75rem] xs:min-h-[2.25rem] sm:min-h-[3rem] md:min-h-[4rem] mb-1 sm:mb-2 flex justify-between items-start gap-1">
+              <div className="w-full grow flex flex-col">
+                <div className="min-h-7 xs:min-h-9 sm:min-h-12 md:min-h-16 mb-1 sm:mb-2 flex justify-between items-start gap-1">
                    <h3 className="text-[10px] xs:text-xs sm:text-base md:text-xl font-bold text-gray-900 group-hover:text-primary-brown transition-colors uppercase leading-tight line-clamp-2 flex-1">
                     {item.name}
                   </h3>
-                  <div className="flex items-center gap-0.5 text-[#FFB800] flex-shrink-0">
+                  <div className="flex items-center gap-0.5 text-[#FFB800] shrink-0">
                     <Star className="w-2 sm:w-4 h-2 sm:h-4 fill-[#FFB800]" />
                     <span className="text-[7px] sm:text-xs font-bold text-gray-600">4.8</span>
                   </div>
@@ -80,7 +80,7 @@ export default function ExploreSection() {
                 {item.description ? (
                   <p className="hidden xs:block text-gray-500 text-[9px] sm:text-sm mb-2 sm:mb-4 line-clamp-2">{item.description}</p>
                 ) : (
-                  <div className="flex-grow"></div>
+                  <div className="grow"></div>
                 )}
                 
                 <div className="mt-auto flex justify-between items-center pt-1.5 sm:pt-4 border-t border-gray-100 group-hover:border-primary-brown/20 transition-colors gap-1.5">
@@ -90,7 +90,7 @@ export default function ExploreSection() {
                   
                   <button
                     onClick={() => addItem({ name: item.name, price: item.price })}
-                    className="bg-primary-brown text-white w-7 h-7 xs:w-8 xs:h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl shadow-xl shadow-primary-brown/20 hover:scale-110 active:scale-95 transition-all flex items-center justify-center group/add flex-shrink-0"
+                    className="bg-primary-brown text-white w-7 h-7 xs:w-8 xs:h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl shadow-xl shadow-primary-brown/20 hover:scale-110 active:scale-95 transition-all flex items-center justify-center group/add shrink-0"
                     aria-label={`Add ${item.name} to cart`}
                   >
                     <Plus className="w-3.5 h-3.5 sm:w-6 sm:h-6 group-hover/add:rotate-90 transition-transform" />

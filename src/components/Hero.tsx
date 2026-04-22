@@ -73,14 +73,14 @@ export default function Hero() {
               <p className="text-white text-xs sm:text-xs font-bold leading-tight line-clamp-1">Fast Delivery</p>
               <p className="text-gray-400 text-[9px] sm:text-[10px] leading-tight">Warkop Courier</p>
             </div>
-            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[rgba(255,184,0,0.1)] flex items-center justify-center ml-1 sm:ml-2 border border-[#FFB800]/20 flex-shrink-0">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[rgba(255,184,0,0.1)] flex items-center justify-center ml-1 sm:ml-2 border border-[#FFB800]/20 shrink-0">
               <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFB800]" />
             </div>
           </div>
 
           {/* Floating Badge 2 (Price/Rating) */}
           <div className="absolute bottom-4 sm:bottom-[5%] md:bottom-[10%] right-2 sm:right-4 lg:right-0 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-4 shadow-2xl flex items-center gap-2 sm:gap-4 animate-bounce text-xs sm:text-sm z-20" style={{animationDelay: '1.5s', animationDuration: '3.5s'}}>
-             <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full overflow-hidden relative bg-gray-200 border-2 border-white shadow-inner flex-shrink-0">
+             <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full overflow-hidden relative bg-gray-200 border-2 border-white shadow-inner shrink-0">
                 <Image src="/hero-warkop.png" alt="Mie Aceh" fill className="object-cover" />
              </div>
              <div>

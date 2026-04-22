@@ -23,7 +23,7 @@ export default function AboutUs() {
         
         <div className="lg:w-1/2 relative h-[300px] xs:h-[400px] md:h-[600px] w-full order-1 lg:order-2 mt-8 lg:mt-0">
           {/* Circular Image Background */}
-          <div className="absolute top-0 right-0 w-[200px] xs:w-[240px] sm:w-[280px] md:w-[450px] md:h-[450px] h-[200px] xs:h-[240px] sm:h-[280px] rounded-full overflow-hidden shadow-2xl z-0 border-4 sm:border-8 md:border-[10px] border-white ring-1 ring-gray-100 scale-100 md:scale-110">
+          <div className="absolute top-0 right-0 w-[200px] xs:w-[240px] sm:w-[280px] md:w-[450px] md:h-[450px] h-[200px] xs:h-[240px] sm:h-[280px] rounded-full overflow-hidden shadow-2xl z-0 border-4 sm:border-8 md:border-10 border-white ring-1 ring-gray-100 scale-100 md:scale-110">
             <Image
               src="/about-warkop.png"
               alt="Warkop Interior"
@@ -34,7 +34,7 @@ export default function AboutUs() {
           </div>
           
           {/* Overlapping Rounded Image */}
-          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 md:bottom-0 md:left-0 w-[150px] xs:w-[180px] h-[150px] xs:h-[180px] sm:w-[220px] sm:h-[220px] md:w-[350px] md:h-[350px] rounded-2xl xs:rounded-[30px] sm:rounded-[40px] md:rounded-[60px] overflow-hidden shadow-2xl z-10 border-4 sm:border-8 md:border-[10px] border-white ring-1 ring-gray-100 transform -rotate-3 md:-rotate-6 scale-100 md:scale-105">
+          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 md:bottom-0 md:left-0 w-[150px] xs:w-[180px] h-[150px] xs:h-[180px] sm:w-[220px] sm:h-[220px] md:w-[350px] md:h-[350px] rounded-2xl xs:rounded-[30px] sm:rounded-[40px] md:rounded-[60px] overflow-hidden shadow-2xl z-10 border-4 sm:border-8 md:border-10 border-white ring-1 ring-gray-100 transform -rotate-3 md:-rotate-6 scale-100 md:scale-105">
             <Image
               src="/teh-tarek.png"
               alt="Teh Tarek"

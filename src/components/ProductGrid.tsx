@@ -26,7 +26,7 @@ function ProductCard({ name, price, image }: ProductProps) {
       </div>
       
       <div className="flex-1 w-full flex flex-col">
-        <div className="min-h-[1.75rem] xs:min-h-[2.25rem] sm:min-h-[3.5rem] md:min-h-[4rem] mb-1 sm:mb-2">
+        <div className="min-h-7 xs:min-h-9 sm:min-h-14 md:min-h-16 mb-1 sm:mb-2">
           <h3 className="text-white text-[10px] xs:text-xs sm:text-xl md:text-2xl font-bold uppercase tracking-wider line-clamp-2 leading-tight text-center">{name}</h3>
         </div>
         

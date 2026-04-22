@@ -4,7 +4,7 @@ import { ArrowRight, Mail, Globe, Camera, Send } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="pt-16 sm:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-bg-dark text-white">
+    <footer className="pt-16 sm:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 md:px-8 border-t border-white/10 bg-bg-dark text-white relative">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 text-center sm:text-left">
         <div className="flex flex-col items-center sm:items-start">
           <div className="flex items-center gap-3 mb-6">

@@ -34,7 +34,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo Section */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 relative z-20">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#FFB800] flex items-center justify-center flex-shrink-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#FFB800] flex items-center justify-center shrink-0">
              <span className="text-black font-bold text-base sm:text-lg leading-none mt-1">W</span>
           </div>
           <div className="flex items-center">

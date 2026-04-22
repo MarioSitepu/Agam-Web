@@ -81,7 +81,7 @@ export default function OrderReviewModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="sticky top-0 bg-gradient-to-r from-primary-brown to-primary-brown/80 text-white px-6 py-5 flex items-center justify-between border-b border-white/10 z-10">
+          <div className="sticky top-0 bg-linear-to-r from-primary-brown to-primary-brown/80 text-white px-6 py-5 flex items-center justify-between border-b border-white/10 z-10">
             <div>
               <h2 className="text-xl font-bold uppercase tracking-wider">
                 Order Review
@@ -225,7 +225,7 @@ export default function OrderReviewModal({
             <button
               onClick={onConfirm}
               disabled={isLoading}
-              className="flex-1 bg-gradient-to-r from-primary-brown to-primary-brown/80 hover:from-primary-brown/90 hover:to-primary-brown/70 text-white py-3 rounded-2xl font-bold uppercase tracking-wider text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 shadow-lg"
+              className="flex-1 bg-linear-to-r from-primary-brown to-primary-brown/80 hover:from-primary-brown/90 hover:to-primary-brown/70 text-white py-3 rounded-2xl font-bold uppercase tracking-wider text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 shadow-lg"
             >
               {isLoading ? "Sending..." : "Order"}
             </button>

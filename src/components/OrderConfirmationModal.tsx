@@ -50,7 +50,7 @@ export default function OrderConfirmationModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Success Header */}
-          <div className="bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-4 text-center">
+          <div className="bg-linear-to-r from-green-600 to-green-500 text-white px-4 py-4 text-center">
             <div className="flex justify-center mb-2">
               <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
                 <CheckCircle size={24} className="text-white" />
@@ -83,7 +83,7 @@ export default function OrderConfirmationModal({
 
               <div className="space-y-1.5">
                 <div className="flex items-start gap-2">
-                  <div className="w-4 h-4 rounded-full bg-secondary-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-4 h-4 rounded-full bg-secondary-gold/20 flex items-center justify-center shrink-0 mt-0.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-secondary-gold" />
                   </div>
                   <div>
@@ -95,7 +95,7 @@ export default function OrderConfirmationModal({
                 </div>
 
                 <div className="flex items-start gap-2">
-                  <div className="w-4 h-4 rounded-full bg-secondary-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-4 h-4 rounded-full bg-secondary-gold/20 flex items-center justify-center shrink-0 mt-0.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-secondary-gold" />
                   </div>
                   <div>
@@ -123,7 +123,7 @@ export default function OrderConfirmationModal({
             {/* Reorder Button - Changed to button to properly close modal on the same page */}
             <button
               onClick={onClose}
-              className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-primary-brown to-primary-brown/80 text-white py-2 rounded-xl font-bold uppercase tracking-wider text-[11px] transition-all active:scale-95 shadow-lg"
+              className="flex items-center justify-center gap-2 w-full bg-linear-to-r from-primary-brown to-primary-brown/80 text-white py-2 rounded-xl font-bold uppercase tracking-wider text-[11px] transition-all active:scale-95 shadow-lg"
             >
               <ShoppingCart size={14} />
               <span>Continue Ordering</span>
